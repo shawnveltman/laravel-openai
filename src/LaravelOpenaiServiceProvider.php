@@ -2,9 +2,9 @@
 
 namespace Shawnveltman\LaravelOpenai;
 
+use Shawnveltman\LaravelOpenai\Commands\LaravelOpenaiCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Shawnveltman\LaravelOpenai\Commands\LaravelOpenaiCommand;
 
 class LaravelOpenaiServiceProvider extends PackageServiceProvider
 {
@@ -20,6 +20,6 @@ class LaravelOpenaiServiceProvider extends PackageServiceProvider
             ->hasConfigFile('openai')
             ->hasViews()
             ->hasMigration('create_cost_logs_table');
-//            ->hasCommand(LaravelOpenaiCommand::class);
+        //            ->hasCommand(LaravelOpenaiCommand::class);
     }
 }

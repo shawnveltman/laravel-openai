@@ -1,17 +1,13 @@
 <?php
 
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Shawnveltman\LaravelOpenai\TestClass;
 use Shawnveltman\LaravelOpenai\Models\CostLog;
-use Mockery;
-use Mockery\MockInterface;
-use Illuminate\Support\Facades\Log;
-
+use Shawnveltman\LaravelOpenai\TestClass;
 
 uses(WithFaker::class);
 
@@ -39,6 +35,7 @@ test('get_openai_chat_completion returns the expected response', function () {
         'api.openai.com/v1/chat/completions' => function ($request) use ($fakeApiResponse) {
             // This will log the body of the request to see if it matches what you expect
             ray('Fake OpenAI request body:', $request->data());
+
             return Http::response($fakeApiResponse, 200);
         },
     ]);
@@ -103,7 +100,7 @@ it('can test for model existence', function () {
 
 // Test for get_openai_moderation
 test('get_openai_moderation returns the expected moderation response', function () {
-    $prompt = "Some content to be moderated.";
+    $prompt = 'Some content to be moderated.';
 
     Http::fake([
         'api.openai.com/v1/moderations' => Http::response(['moderation' => 'content is clean'], 200),
@@ -116,10 +113,10 @@ test('get_openai_moderation returns the expected moderation response', function 
 
 // Test for generate_chat_array_from_input_prompt
 test('generate_chat_array_from_input_prompt returns a correct chat array', function () {
-    $inputPrompt = "Hello, OpenAI!";
+    $inputPrompt = 'Hello, OpenAI!';
     $expectedOutput = [
         [
-            'role'    => 'user',
+            'role' => 'user',
             'content' => $inputPrompt,
         ],
     ];
@@ -208,7 +205,7 @@ test('clean_json_string finds and extracts JSON from string', function () {
 
 // Test get_ada_embedding
 test('get_ada_embedding returns embedding for content', function () {
-    $contents = "This is some text to get embeddings for.";
+    $contents = 'This is some text to get embeddings for.';
 
     $fakeApiResponse = [
         'data' => [
@@ -229,7 +226,7 @@ test('get_ada_embedding returns embedding for content', function () {
 
 // Test for clean_json_string with a string containing no JSON object
 test('clean_json_string returns null when string contains no JSON object or array', function () {
-    $nonJsonString = "This is just a plain text, no JSON here!";
+    $nonJsonString = 'This is just a plain text, no JSON here!';
 
     $result = $this->testClass->clean_json_string($nonJsonString);
 
@@ -277,7 +274,7 @@ it('ensures attempt_log_prompt logs an error when log_prompt fails', function ()
     ]);
 
     // Setup a listener to hear the model created event and throw an exception when it's heard
-    Event::listen('eloquent.created: ' . CostLog::class, function () {
+    Event::listen('eloquent.created: '.CostLog::class, function () {
         throw new Exception('Database write failed');
     });
 
@@ -293,7 +290,5 @@ it('ensures attempt_log_prompt logs an error when log_prompt fails', function ()
     expect($response)->toBe('Response from OpenAI');
 
     // After the test, remove the event listener to avoid affecting subsequent tests
-    Event::forget('eloquent.created: ' . CostLog::class);
+    Event::forget('eloquent.created: '.CostLog::class);
 });
-
-
