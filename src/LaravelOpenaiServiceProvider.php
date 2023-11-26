@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace Shawnveltman\LaravelOpenai;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VendorName\Skeleton\Commands\SkeletonCommand;
+use Shawnveltman\LaravelOpenai\Commands\LaravelOpenaiCommand;
 
-class SkeletonServiceProvider extends PackageServiceProvider
+class LaravelOpenaiServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
@@ -16,10 +16,10 @@ class SkeletonServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('skeleton')
-            ->hasConfigFile()
+            ->name('laravel-openai')
+            ->hasConfigFile('openai')
             ->hasViews()
-            ->hasMigration('create_skeleton_table')
-            ->hasCommand(SkeletonCommand::class);
+            ->hasMigration('create_cost_logs_table');
+//            ->hasCommand(LaravelOpenaiCommand::class);
     }
 }

@@ -1,10 +1,11 @@
 <?php
 
-namespace VendorName\Skeleton\Tests;
+namespace Shawnveltman\LaravelOpenai\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Http;
 use Orchestra\Testbench\TestCase as Orchestra;
-use VendorName\Skeleton\SkeletonServiceProvider;
+use Shawnveltman\LaravelOpenai\LaravelOpenaiServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -13,14 +14,16 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'VendorName\\Skeleton\\Database\\Factories\\'.class_basename($modelName).'Factory'
+            fn (string $modelName) => 'Shawnveltman\\LaravelOpenai\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
+
+        Http::preventStrayRequests();
     }
 
     protected function getPackageProviders($app)
     {
         return [
-            SkeletonServiceProvider::class,
+            LaravelOpenaiServiceProvider::class,
         ];
     }
 
@@ -28,9 +31,11 @@ class TestCase extends Orchestra
     {
         config()->set('database.default', 'testing');
 
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_skeleton_table.php.stub';
+
+        $migration = include __DIR__.'/../database/migrations/create_cost_logs_table.php.stub';
         $migration->up();
-        */
+
+        $migration = include __DIR__.'/../database/migrations/create_users_table.php.stub';
+        $migration->up();
     }
 }
