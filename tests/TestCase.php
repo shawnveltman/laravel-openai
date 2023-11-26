@@ -31,7 +31,6 @@ class TestCase extends Orchestra
     {
         config()->set('database.default', 'testing');
 
-
         $migration = include __DIR__.'/../database/migrations/create_cost_logs_table.php.stub';
         $migration->up();
 

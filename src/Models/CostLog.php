@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class CostLog extends Model
 {
     use HasFactory;
+
     public $guarded = [];
-    
 
 }

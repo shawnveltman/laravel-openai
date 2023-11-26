@@ -1,8 +1,7 @@
 <?php
 
-use Shawnveltman\LaravelOpenai\Tests\TestCase;
 use Illuminate\Support\Facades\Http;
-
+use Shawnveltman\LaravelOpenai\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);
 
