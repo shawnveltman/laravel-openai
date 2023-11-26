@@ -91,11 +91,6 @@ test('it handles and logs the response correctly', function () {
     ]);
 });
 
-it('can test', function () {
-    $model = Shawnveltman\LaravelOpenai\Models\CostLog::factory()->create();
-    $this->assertModelExists($model);
-});
-
 it('can test for model existence', function () {
     $model = CostLog::factory()->create();
     $this->assertModelExists($model);
