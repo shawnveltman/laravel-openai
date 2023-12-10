@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Rajentrivedi\TokenizerX\TokenizerX;
+use Shawnveltman\LaravelOpenai\Exceptions\GeneralOpenAiException;
 use Shawnveltman\LaravelOpenai\Exceptions\OpenAi500ErrorException;
 use Shawnveltman\LaravelOpenai\Exceptions\OpenAiRateLimitExceededException;
 use Shawnveltman\LaravelOpenai\Models\CostLog;
@@ -73,7 +74,7 @@ trait OpenAiTrait
             throw new OpenAi500ErrorException('OpenAI API returned a 500 error.');
         }
 
-        return;
+        throw new GeneralOpenAiException('OpenAI API returned an error that was neither 429 nor 500.');
     }
 
     public function get_openai_moderation($prompt)
