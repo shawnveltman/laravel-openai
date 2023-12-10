@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Shawnveltman\LaravelOpenai\Exceptions\OpenAi500ErrorException;
+use Shawnveltman\LaravelOpenai\Exceptions\OpenAiRateLimitExceededException;
 use Shawnveltman\LaravelOpenai\Models\CostLog;
 use Shawnveltman\LaravelOpenai\TestClass;
 
@@ -286,4 +288,27 @@ it('ensures attempt_log_prompt logs an error when log_prompt fails', function ()
 
     // After the test, remove the event listener to avoid affecting subsequent tests
     Event::forget('eloquent.created: '.CostLog::class);
+});
+
+test('get_openai_chat_completion throws OpenAiRateLimitExceededException on 429 error', function () {
+    Http::fake([
+        'api.openai.com/v1/chat/completions' => Http::response('Rate limit exceeded', 429),
+    ]);
+
+    $this->expectException(OpenAiRateLimitExceededException::class);
+    $this->expectExceptionMessage('OpenAI API rate limit exceeded.');
+
+    $this->testClass->get_openai_chat_completion(messages: [['role' => 'user', 'content' => 'Hello, World!']]);
+});
+
+// Test for handling 500 Internal Server Error
+test('get_openai_chat_completion throws OpenAi500ErrorException on 500 error', function () {
+    Http::fake([
+        'api.openai.com/v1/chat/completions' => Http::response('Internal Server Error', 500),
+    ]);
+
+    $this->expectException(OpenAi500ErrorException::class);
+    $this->expectExceptionMessage('OpenAI API returned a 500 error.');
+
+    $this->testClass->get_openai_chat_completion(messages: [['role' => 'user', 'content' => 'Hello, World!']]);
 });

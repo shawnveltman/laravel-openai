@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Rajentrivedi\TokenizerX\TokenizerX;
+use Shawnveltman\LaravelOpenai\Exceptions\OpenAi500ErrorException;
+use Shawnveltman\LaravelOpenai\Exceptions\OpenAiRateLimitExceededException;
 use Shawnveltman\LaravelOpenai\Models\CostLog;
 
 trait OpenAiTrait
@@ -49,12 +51,29 @@ trait OpenAiTrait
             $instructions_array['functions'] = $function_definition;
         }
 
-        return Http::withToken(config('ai_providers.open_ai_key'))
+        $response = Http::withToken(config('ai_providers.open_ai_key'))
             ->timeout($timeout_in_seconds)
             ->post(
                 url: 'https://api.openai.com/v1/chat/completions',
                 data: $instructions_array
-            )->json();
+            );
+
+        if($response->ok())
+        {
+            return $response->json();
+        }
+
+        if($response->status() === 429)
+        {
+            throw new OpenAiRateLimitExceededException('OpenAI API rate limit exceeded.');
+        }
+
+        if($response->status() === 500)
+        {
+            throw new OpenAi500ErrorException('OpenAI API returned a 500 error.');
+        }
+
+        return;
     }
 
     public function get_openai_moderation($prompt)
