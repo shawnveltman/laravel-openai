@@ -25,7 +25,7 @@ trait OpenAiTrait
         string $model = 'gpt-3.5-turbo',
         string $role_context = 'You are a helpful assistant.',
         int $timeout_in_seconds = 600,
-        array $function_definition = null,
+        ?array $function_definition = null,
         bool $json_mode = false,
     ) {
         $final_messages = collect([
@@ -59,18 +59,15 @@ trait OpenAiTrait
                 data: $instructions_array
             );
 
-        if($response->ok())
-        {
+        if ($response->ok()) {
             return $response->json();
         }
 
-        if($response->status() === 429)
-        {
+        if ($response->status() === 429) {
             throw new OpenAiRateLimitExceededException('OpenAI API rate limit exceeded.');
         }
 
-        if($response->status() === 500)
-        {
+        if ($response->status() === 500) {
             throw new OpenAi500ErrorException('OpenAI API returned a 500 error.');
         }
 
@@ -102,9 +99,9 @@ trait OpenAiTrait
         string $prompt,
         string $context = 'You are a helpful assistant',
         string $model = 'gpt-3.5-turbo',
-        array $function_definition = null,
+        ?array $function_definition = null,
         bool $json_mode = false,
-        int $user_id = null,
+        ?int $user_id = null,
     ): ?string {
         $messages = $this->generate_chat_array_from_input_prompt($prompt);
         $approximateinput_tokens = TokenizerX::count($prompt);
@@ -154,7 +151,7 @@ trait OpenAiTrait
     }
 
     public function get_whisper_transcription(
-        string $filepath = null,
+        ?string $filepath = null,
         ?string $filename = 'my_file.wav',
         int $timeout_seconds = 6000,
         string $model = 'whisper-1',
