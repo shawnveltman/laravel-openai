@@ -205,17 +205,16 @@ trait OpenAiTrait
             return null;
         }
 
-        $stripped_response = Str::replace("\n", '', $response);
-        $new_stripped_response = $this->validate_and_fix_json($stripped_response);
-        if ($new_stripped_response === $stripped_response) {
-            return json_decode($stripped_response, true);
+        $new_stripped_response = $this->validate_and_fix_json($response);
+        if ($new_stripped_response === $response) {
+            return json_decode($response, true);
         }
 
         if ($new_stripped_response !== null) {
             return json_decode($this->clean_json_string($new_stripped_response), true);
         }
 
-        $stripped_response = $this->clean_json_string($stripped_response);
+        $stripped_response = $this->clean_json_string($response);
 
         return json_decode($stripped_response, true);
     }
