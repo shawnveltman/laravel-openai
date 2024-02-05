@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.0.4 - 2024-02-05
+
+Added ability to include user identifier in api output call
+
 ## 1.0.3 - 2024-01-16
 
 Removed newline stripping
