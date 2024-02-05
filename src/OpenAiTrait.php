@@ -132,6 +132,12 @@ trait OpenAiTrait
             return null;
         }
 
+        $user_identifier = null;
+        if ($user_id)
+        {
+            $user_identifier = 'user-' . $user_id;
+        }
+
         $raw_response = $this->get_openai_chat_completion(
             messages: $messages,
             max_tokens: $approximate_output_max_tokens,
@@ -140,6 +146,7 @@ trait OpenAiTrait
             timeout_in_seconds: 1800,
             function_definition: $function_definition,
             json_mode: $json_mode,
+            user_identifier: $user_identifier,
         );
 
         $summary_response_text = $raw_response['choices'][0]['message']['content'] ?? null;
