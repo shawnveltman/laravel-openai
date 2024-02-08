@@ -111,7 +111,8 @@ trait OpenAiTrait
         $messages = $this->generate_chat_array_from_input_prompt($prompt);
         $approximateinput_tokens = TokenizerX::count($prompt);
 
-        if ($model === 'gpt-4-1106-preview') {
+        $gpt4_models = collect(['gpt-4-1106-preview', 'gpt-4-turbo-preview', 'gpt-4-0125-preview']);
+        if ($gpt4_models->contains($model)) {
             $approximate_output_max_tokens = 4096;
         } else {
             $approximate_output_max_tokens = $this->get_max_output_tokens($model) - $approximateinput_tokens;
