@@ -123,9 +123,8 @@ trait OpenAiTrait
         }
 
         $user_identifier = null;
-        if ($user_id)
-        {
-            $user_identifier = 'user-' . $user_id;
+        if ($user_id) {
+            $user_identifier = 'user-'.$user_id;
         }
 
         $raw_response = $this->get_openai_chat_completion(
