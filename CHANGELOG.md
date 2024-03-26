@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.0.6 - 2024-02-08
+
+Updated to include more general GPT4 models
+
 ## 1.0.5 - 2024-02-05
 
 Fixed issue with user identifier in main method we call from this package
