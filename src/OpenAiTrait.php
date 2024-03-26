@@ -157,7 +157,7 @@ trait OpenAiTrait
             return 8000;
         }
 
-        if (Str::contains($model, ['gpt-3.5-turbo-16k','gpt-3.5-turbo'])) {
+        if (Str::contains($model, ['gpt-3.5-turbo-16k', 'gpt-3.5-turbo'])) {
             return 16000;
         }
 
