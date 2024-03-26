@@ -107,6 +107,7 @@ trait OpenAiTrait
         ?array $function_definition = null,
         bool $json_mode = false,
         ?int $user_id = null,
+        ?float $temperature = 0.7,
     ): ?string {
         $messages = $this->generate_chat_array_from_input_prompt($prompt);
         $approximateinput_tokens = TokenizerX::count($prompt);
@@ -129,6 +130,7 @@ trait OpenAiTrait
 
         $raw_response = $this->get_openai_chat_completion(
             messages: $messages,
+            temperature: $temperature,
             max_tokens: $approximate_output_max_tokens,
             model: $model,
             role_context: $context,
