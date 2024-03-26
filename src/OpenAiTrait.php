@@ -115,7 +115,7 @@ trait OpenAiTrait
         if ($gpt4_models->contains($model)) {
             $approximate_output_max_tokens = 4096;
         } else {
-            $approximate_output_max_tokens = $this->get_max_output_tokens($model) - $approximateinput_tokens;
+            $approximate_output_max_tokens = min(4096, $this->get_max_output_tokens($model) - $approximateinput_tokens);
         }
 
         if ($approximate_output_max_tokens < 0) {
@@ -155,7 +155,7 @@ trait OpenAiTrait
             return 8000;
         }
 
-        if (Str::contains($model, 'gpt-3.5-turbo-16k')) {
+        if (Str::contains($model, ['gpt-3.5-turbo-16k','gpt-3.5-turbo'])) {
             return 16000;
         }
 
