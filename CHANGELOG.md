@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.0.9 - 2024-04-01
+
+Working to upgrade to allow for Laravel 11 as well
+
 ## 1.0.8 - 2024-03-26
 
 Added ability to specify temperature
