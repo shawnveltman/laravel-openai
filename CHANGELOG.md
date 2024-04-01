@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.0.8 - 2024-03-26
+
+Added ability to specify temperature
+
 ## 1.0.6 - 2024-02-08
 
 Updated to include more general GPT4 models
