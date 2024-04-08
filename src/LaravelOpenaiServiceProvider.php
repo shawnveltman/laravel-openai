@@ -19,7 +19,8 @@ class LaravelOpenaiServiceProvider extends PackageServiceProvider
             ->name('laravel-openai')
             ->hasConfigFile('ai_providers')
 //            ->hasViews()
-            ->hasMigration('create_cost_logs_table');
+            ->hasMigration('create_cost_logs_table')
+            ->hasMigration('2024_04_07_151554_add_description_and_job_uuid_to_cost_logs_table');
         //            ->hasCommand(LaravelOpenaiCommand::class);
     }
 }
