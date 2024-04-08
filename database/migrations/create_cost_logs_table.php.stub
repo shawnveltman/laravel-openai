@@ -10,12 +10,14 @@ return new class extends Migration
     {
         Schema::create('cost_logs', function (Blueprint $table) {
                    $table->id();
-                   $table->unsignedBigInteger('user_id');
+                   $table->unsignedBigInteger('user_id')->nullable();
                    $table->string('prompt_identifier')->nullable();
                    $table->integer('input_tokens');
                    $table->integer('output_tokens');
                    $table->string('service');
                    $table->string('model');
+                   $table->string('description')->nullable();
+                   $table->string('job_uuid')->nullable();
                    $table->timestamps();
                });
     }

@@ -20,7 +20,8 @@ class LaravelOpenaiServiceProvider extends PackageServiceProvider
             ->hasConfigFile('ai_providers')
 //            ->hasViews()
             ->hasMigration('create_cost_logs_table')
-            ->hasMigration('2024_04_07_151554_add_description_and_job_uuid_to_cost_logs_table');
+            ->hasMigration('02-add_description_and_job_uuid_to_cost_logs_table')
+            ->hasMigration('03_make_user_id_nullable_on_costs_table');
         //            ->hasCommand(LaravelOpenaiCommand::class);
     }
 }
