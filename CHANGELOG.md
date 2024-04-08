@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.14.0 - 2024-04-08
+
+Some updates on Claude trait to introduce json mode
+
 ## 1.13.0 - 2024-04-08
 
 updated cost logs to be able to accept a null user id
