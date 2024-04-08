@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.12.0 - 2024-04-08
+
+Updated to allow for migration to be published
+
 ## 1.10.0 - 2024-04-01
 
 Continuing to work on tokenizer fix
