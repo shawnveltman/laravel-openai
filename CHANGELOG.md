@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.13.0 - 2024-04-08
+
+updated cost logs to be able to accept a null user id
+
 ## 1.12.0 - 2024-04-08
 
 Updated to allow for migration to be published
