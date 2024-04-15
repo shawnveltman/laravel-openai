@@ -210,7 +210,7 @@ trait OpenAiTrait
         return null;
     }
 
-    public function get_corrected_json_from_response(?string $response, $user_id = null): ?array
+    public function get_corrected_json_from_response(?string $response, ?int $user_id = null, string $json_first_key_name = 'response'): ?array
     {
         if (! $response) {
             return null;
@@ -233,7 +233,7 @@ trait OpenAiTrait
             $array = $this->get_fallback_response_from_open_ai(
                 response_text: $response,
                 user_id: $user_id,
-                json_first_key_name: 'response'
+                json_first_key_name: $json_first_key_name
             );
         }
 
