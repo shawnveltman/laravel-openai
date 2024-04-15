@@ -228,8 +228,7 @@ trait OpenAiTrait
         $stripped_response = $this->clean_json_string($response);
 
         $array = json_decode($stripped_response, true);
-        if (!$array || count($array) < 1)
-        {
+        if (! $array || count($array) < 1) {
             $array = $this->get_fallback_response_from_open_ai(
                 response_text: $response,
                 user_id: $user_id,
@@ -297,7 +296,7 @@ trait OpenAiTrait
 
     public function get_fallback_response_from_open_ai(string $response_text, int $user_id, string $json_first_key_name): array
     {
-        $prompt   = <<<EOD
+        $prompt = <<<EOD
 Please carefully analyze the malformed JSON string below, and identify what the issues are that are causing it to be malformed.
 Please also return a corrected JSON string that is valid.  Make only the minimum required to make the JSON valid.
 If it appears the malformed JSON is attempting to use multiple newlines, please ensure the newlines are modified to be escaped newlines, like \n\n.
