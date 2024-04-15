@@ -210,7 +210,7 @@ trait OpenAiTrait
         return null;
     }
 
-    public function get_corrected_json_from_response(?string $response): ?array
+    public function get_corrected_json_from_response(?string $response, $user_id = null): ?array
     {
         if (! $response) {
             return null;
@@ -227,7 +227,17 @@ trait OpenAiTrait
 
         $stripped_response = $this->clean_json_string($response);
 
-        return json_decode($stripped_response, true);
+        $array = json_decode($stripped_response, true);
+        if (!$array || count($array) < 1)
+        {
+            $array = $this->get_fallback_response_from_open_ai(
+                response_text: $response,
+                user_id: $user_id,
+                json_first_key_name: 'response'
+            );
+        }
+
+        return $array;
     }
 
     public function clean_json_string($str): ?string
@@ -283,5 +293,22 @@ trait OpenAiTrait
         } catch (Exception $e) {
             Log::error('CostLog creation failed: '.$e->getMessage());
         }
+    }
+
+    public function get_fallback_response_from_open_ai(string $response_text, int $user_id, string $json_first_key_name): array
+    {
+        $prompt   = <<<EOD
+Please carefully analyze the malformed JSON string below, and identify what the issues are that are causing it to be malformed.
+Please also return a corrected JSON string that is valid.  Make only the minimum required to make the JSON valid.
+If it appears the malformed JSON is attempting to use multiple newlines, please ensure the newlines are modified to be escaped newlines, like \n\n.
+The JSON should always start with `{"$json_first_key_name": [` and end with ]}.
+MALFORMED STRING:
+{$response_text}
+
+Your output should be ONLY the corrected JSON, and should be in JSON format: {"$json_first_key_name": "..."}
+EOD;
+        $response = $this->get_response_from_prompt_and_context(prompt: $prompt, model: 'gpt-3.5-turbo', json_mode: true, user_id: $user_id);
+
+        return json_decode($response, true);
     }
 }
