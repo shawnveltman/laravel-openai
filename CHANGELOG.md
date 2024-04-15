@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.15.0 - 2024-04-08
+
+updated stub name
+
 ## 1.14.0 - 2024-04-08
 
 Some updates on Claude trait to introduce json mode
