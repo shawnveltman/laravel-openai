@@ -308,6 +308,6 @@ Your output should be ONLY the corrected JSON, and should be in JSON format: {"$
 EOD;
         $response = $this->get_response_from_prompt_and_context(prompt: $prompt, model: 'gpt-3.5-turbo', json_mode: true, user_id: $user_id);
 
-        return json_decode($response, true);
+        return json_decode($response, true) ?? [];
     }
 }
