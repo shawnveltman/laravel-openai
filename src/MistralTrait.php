@@ -4,5 +4,4 @@ namespace Shawnveltman\LaravelOpenai;
 
 trait MistralTrait
 {
-
 }
