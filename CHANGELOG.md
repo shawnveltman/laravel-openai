@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.18.0 - 2024-04-16
+
+Added Mistral trait
+
 ## 1.16.0 - 2024-04-15
 
 Updated json response cleanup method to push to GPT-3.5-turbo to get corrected json if none exists
