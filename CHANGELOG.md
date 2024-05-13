@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.19.0 - 2024-05-13
+
+added new get_embedding method to OpenAI trait to allow for usage of their new embedding models
+
 ## 1.18.0 - 2024-04-16
 
 Added Mistral trait
