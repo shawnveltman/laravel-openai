@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.20.0 - 2024-05-13
+
+Updated to enable gpt-4o
+
 ## 1.19.0 - 2024-05-13
 
 added new get_embedding method to OpenAI trait to allow for usage of their new embedding models
