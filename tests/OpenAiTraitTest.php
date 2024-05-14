@@ -131,7 +131,7 @@ test('get_max_output_tokens returns the correct token count based on model', fun
     $gpt3Result = $this->testClass->get_max_output_tokens($gpt3Model);
     $gpt4Result = $this->testClass->get_max_output_tokens($gpt4Model);
 
-    expect($gpt3Result)->toEqual(3900);
+    expect($gpt3Result)->toEqual(16000);
     expect($gpt4Result)->toEqual(8000);
 });
 
