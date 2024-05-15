@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.21.1 - 2024-05-14
+
+Fixed 1.21.0 to actually incorporate change
+
 ## 1.21.0 - 2024-05-14
 
 Removed requirement of having user_id to do cost log
