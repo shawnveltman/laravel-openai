@@ -54,28 +54,27 @@ trait ClaudeTrait
             ];
         }
 
-        $response_object  = Http::timeout($timeout_seconds)
+        $response_object = Http::timeout($timeout_seconds)
             ->withHeaders([
-                'accept'            => 'application/json',
+                'accept' => 'application/json',
                 'anthropic-version' => '2023-06-01',
-                'content-type'      => 'application/json',
-                'x-api-key'         => config('ai_providers.anthropic_key'),
+                'content-type' => 'application/json',
+                'x-api-key' => config('ai_providers.anthropic_key'),
             ])
             ->post('https://api.anthropic.com/v1/messages', [
-                'metadata'    => [
-                    'user_id' => (string)($user_id),
+                'metadata' => [
+                    'user_id' => (string) ($user_id),
                 ],
-                'max_tokens'  => $max_tokens,
-                'model'       => $model,
-                'messages'    => $messages,
+                'max_tokens' => $max_tokens,
+                'model' => $model,
+                'messages' => $messages,
                 'temperature' => $temperature,
-                'top_p'       => $top_p,
-                'top_k'       => $top_k,
+                'top_p' => $top_p,
+                'top_k' => $top_k,
             ]);
         $response = $response_object->json();
 
-        if(! $response_object->ok() && collect([429, 529])->contains($response_object->status()))
-        {
+        if (! $response_object->ok() && collect([429, 529])->contains($response_object->status())) {
             throw new ClaudeRateLimitException;
         }
 
