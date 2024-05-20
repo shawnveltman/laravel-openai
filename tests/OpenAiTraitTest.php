@@ -262,7 +262,7 @@ it('ensures attempt_log_prompt logs an error when log_prompt fails', function ()
     Http::fake([
         'api.openai.com/v1/chat/completions' => Http::response([
             'choices' => [
-                ['message' => ['content' => 'Response from OpenAI'], 'finish_reason' => 'stop',],
+                ['message' => ['content' => 'Response from OpenAI'], 'finish_reason' => 'stop'],
             ],
             'id' => 'fake_id',
             'usage' => [

@@ -3,9 +3,9 @@
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Shawnveltman\LaravelOpenai\ClaudeTestClass;
 use Shawnveltman\LaravelOpenai\Exceptions\ClaudeRateLimitException;
 use Shawnveltman\LaravelOpenai\Models\CostLog;
-use Shawnveltman\LaravelOpenai\ClaudeTestClass;
 
 uses(WithFaker::class);
 
@@ -16,9 +16,9 @@ beforeEach(function () {
 
 // Test for get_claude_response
 test('get_claude_response returns the expected response', function () {
-    $prompt          = 'Hello, Claude!';
+    $prompt = 'Hello, Claude!';
     $fakeApiResponse = [
-        'stop_reason'=> 'end_turn',
+        'stop_reason' => 'end_turn',
         'content' => [
             [
                 'text' => 'This is a fake response from Claude.',
@@ -58,17 +58,17 @@ test('get_claude_response throws ClaudeRateLimitException on 529 error', functio
 
 // Test that logging works correctly
 test('it logs the response correctly', function () {
-    $prompt          = 'Log this interaction.';
+    $prompt = 'Log this interaction.';
     $fakeApiResponse = [
-        'id'      => 'example-id',
-        'stop_reason'=> 'end_turn',
+        'id' => 'example-id',
+        'stop_reason' => 'end_turn',
         'content' => [
             [
                 'text' => 'Fake response for logging.',
             ],
         ],
-        'usage'   => [
-            'input_tokens'  => 100,
+        'usage' => [
+            'input_tokens' => 100,
             'output_tokens' => 150,
         ],
     ];
@@ -81,12 +81,12 @@ test('it logs the response correctly', function () {
 
     // Verify that the CostLog is written to the database with the correct details
     $this->assertDatabaseHas('cost_logs', [
-        'user_id'           => 1,
+        'user_id' => 1,
         'prompt_identifier' => 'example-id',
-        'model'             => 'claude-3-opus-20240229',
-        'service'           => 'Anthropic',
-        'input_tokens'      => 100,
-        'output_tokens'     => 150,
+        'model' => 'claude-3-opus-20240229',
+        'service' => 'Anthropic',
+        'input_tokens' => 100,
+        'output_tokens' => 150,
     ]);
 });
 
@@ -102,17 +102,17 @@ it('logs an error when log_prompt fails', function () {
             'content' => [
                 ['text' => 'Response from Claude'],
             ],
-            'id'      => 'fake_id',
-            'stop_reason'=> 'end_turn',
-            'usage'   => [
-                'input_tokens'  => 10,
+            'id' => 'fake_id',
+            'stop_reason' => 'end_turn',
+            'usage' => [
+                'input_tokens' => 10,
                 'output_tokens' => 5,
             ],
         ], 200),
     ]);
 
     // Setup a listener to hear the model created event and throw an exception when it's heard
-    Event::listen('eloquent.created: ' . CostLog::class, function () {
+    Event::listen('eloquent.created: '.CostLog::class, function () {
         throw new Exception('Database write failed');
     });
 
@@ -128,5 +128,5 @@ it('logs an error when log_prompt fails', function () {
     expect($response)->toBe('Response from Claude');
 
     // After the test, remove the event listener to avoid affecting subsequent tests
-    Event::forget('eloquent.created: ' . CostLog::class);
+    Event::forget('eloquent.created: '.CostLog::class);
 });
