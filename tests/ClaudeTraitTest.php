@@ -18,6 +18,7 @@ beforeEach(function () {
 test('get_claude_response returns the expected response', function () {
     $prompt          = 'Hello, Claude!';
     $fakeApiResponse = [
+        'stop_reason'=> 'end_turn',
         'content' => [
             [
                 'text' => 'This is a fake response from Claude.',
@@ -60,6 +61,7 @@ test('it logs the response correctly', function () {
     $prompt          = 'Log this interaction.';
     $fakeApiResponse = [
         'id'      => 'example-id',
+        'stop_reason'=> 'end_turn',
         'content' => [
             [
                 'text' => 'Fake response for logging.',
@@ -101,6 +103,7 @@ it('logs an error when log_prompt fails', function () {
                 ['text' => 'Response from Claude'],
             ],
             'id'      => 'fake_id',
+            'stop_reason'=> 'end_turn',
             'usage'   => [
                 'input_tokens'  => 10,
                 'output_tokens' => 5,

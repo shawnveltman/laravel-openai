@@ -28,6 +28,7 @@ test('get_openai_chat_completion returns the expected response', function () {
                 'message' => [
                     'content' => 'This is a fake response from OpenAI.',
                 ],
+                'finish_reason' => 'stop',
             ],
         ],
     ];
@@ -63,6 +64,7 @@ test('it handles and logs the response correctly', function () {
                 'message' => [
                     'content' => 'Fake response for logging.',
                 ],
+                'finish_reason' => 'stop',
             ],
         ],
         'usage' => [
@@ -260,7 +262,7 @@ it('ensures attempt_log_prompt logs an error when log_prompt fails', function ()
     Http::fake([
         'api.openai.com/v1/chat/completions' => Http::response([
             'choices' => [
-                ['message' => ['content' => 'Response from OpenAI']],
+                ['message' => ['content' => 'Response from OpenAI'], 'finish_reason' => 'stop',],
             ],
             'id' => 'fake_id',
             'usage' => [
