@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.24.0 - 2024-05-20
+
+Actually updated to allow for overages in Claude & OpenAI
+
 ## 1.23.0 - 2024-05-20
 
 Added in the ability to continue generating content for both OpenAI and Claude if it hits its limits.
