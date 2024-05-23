@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.25.1 - 2024-05-23
+
+minor modificaiton of fallback json prompt
+
 ## 1.25.0 - 2024-05-23
 
 Updated fallback response to not require user_id
