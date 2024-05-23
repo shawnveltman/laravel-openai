@@ -356,7 +356,7 @@ EOD;
 Please carefully analyze the malformed JSON string below, and identify what the issues are that are causing it to be malformed.
 Please also return a corrected JSON string that is valid.  Make only the minimum required to make the JSON valid.
 If it appears the malformed JSON is attempting to use multiple newlines, please ensure the newlines are modified to be escaped newlines, like \n\n.
-The JSON should always start with `{"$json_first_key_name": [` and end with ]}.
+The JSON should always start with `{"$json_first_key_name": ` and end with }.
 MALFORMED STRING:
 {$response_text}
 
