@@ -381,7 +381,7 @@ EOD;
         }
     }
 
-    public function get_fallback_response_from_open_ai(string $response_text, int $user_id, string $json_first_key_name): array
+    public function get_fallback_response_from_open_ai(string $response_text, ?int $user_id = null, string $json_first_key_name = ''): array
     {
         $prompt   = <<<EOD
 Please carefully analyze the malformed JSON string below, and identify what the issues are that are causing it to be malformed.
