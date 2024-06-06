@@ -34,18 +34,16 @@ trait ClaudeTrait
         bool $json_mode = false,
         int $max_token_retry_attempts = 2,
     ): mixed {
-        if (count($messages) < 1)
-        {
+        if (count($messages) < 1) {
             $messages = [
                 [
-                    'role'    => 'user',
+                    'role' => 'user',
                     'content' => $prompt,
                 ],
             ];
-        } else
-        {
+        } else {
             $messages[] = [
-                'role'    => 'user',
+                'role' => 'user',
                 'content' => $prompt,
             ];
         }
