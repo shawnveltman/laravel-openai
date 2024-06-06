@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.26.0 - 2024-06-04
+
+Added basic Gemini support
+
 ## 1.25.1 - 2024-05-23
 
 minor modificaiton of fallback json prompt
