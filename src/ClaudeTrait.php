@@ -34,13 +34,19 @@ trait ClaudeTrait
         bool $json_mode = false,
         int $max_token_retry_attempts = 2,
     ): mixed {
-        $formatted_prompt = $prompt;
-        if ($iteration <= 1) {
+        if (count($messages) < 1)
+        {
             $messages = [
                 [
-                    'role' => 'user',
+                    'role'    => 'user',
                     'content' => $prompt,
                 ],
+            ];
+        } else
+        {
+            $messages[] = [
+                'role'    => 'user',
+                'content' => $prompt,
             ];
         }
 
@@ -83,7 +89,7 @@ trait ClaudeTrait
 
             $this->logged_response = $response;
 
-            $this->logged_formatted_prompt = $formatted_prompt;
+            $this->logged_formatted_prompt = $prompt;
             $this->claude_attempt_log_prompt(raw_response: $response, model: $model, description: $description, job_uuid: $job_uuid, user_id: $user_id);
 
             $collected_response = collect($response['content']);
