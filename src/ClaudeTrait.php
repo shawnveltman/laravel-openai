@@ -33,19 +33,18 @@ trait ClaudeTrait
         ?string $job_uuid = null,
         bool $json_mode = false,
         int $max_token_retry_attempts = 2,
+        ?string $system_prompt = null,
     ): mixed {
-        if (count($messages) < 1)
-        {
+        if (count($messages) < 1) {
             $messages = [
                 [
-                    'role'    => 'user',
+                    'role' => 'user',
                     'content' => $prompt,
                 ],
             ];
-        } else
-        {
+        } else {
             $messages[] = [
-                'role'    => 'user',
+                'role' => 'user',
                 'content' => $prompt,
             ];
         }
@@ -63,6 +62,23 @@ trait ClaudeTrait
 
         $retry_count = 0;
         while ($retry_count < $max_token_retry_attempts) {
+            $parameters            = [
+                'metadata'    => [
+                    'user_id' => (string)($user_id),
+                ],
+                'max_tokens'  => $max_tokens,
+                'model'       => $model,
+                'messages'    => $messages,
+                'temperature' => $temperature,
+                'top_p'       => $top_p,
+                'top_k'       => $top_k,
+            ];
+
+            if($system_prompt)
+            {
+                $parameters['system'] = $system_prompt;
+            }
+
             $response_object = Http::timeout($timeout_seconds)
                 ->withHeaders([
                     'accept' => 'application/json',
@@ -70,18 +86,8 @@ trait ClaudeTrait
                     'content-type' => 'application/json',
                     'x-api-key' => config('ai_providers.anthropic_key'),
                 ])
-                ->post('https://api.anthropic.com/v1/messages', [
-                    'metadata' => [
-                        'user_id' => (string) ($user_id),
-                    ],
-                    'max_tokens' => $max_tokens,
-                    'model' => $model,
-                    'messages' => $messages,
-                    'temperature' => $temperature,
-                    'top_p' => $top_p,
-                    'top_k' => $top_k,
-                ]);
-            $response = $response_object->json();
+                ->post('https://api.anthropic.com/v1/messages', $parameters);
+            $response        = $response_object->json();
 
             if (! $response_object->ok() && collect([429, 529])->contains($response_object->status())) {
                 throw new ClaudeRateLimitException;
