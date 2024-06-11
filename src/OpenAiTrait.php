@@ -119,8 +119,23 @@ trait OpenAiTrait
         ?int $user_id = null,
         ?float $temperature = 0.7,
         int $retry_count = 0,
+        array   $messages = [],
     ): ?string {
-        $messages = $this->generate_chat_array_from_input_prompt($prompt);
+
+        if (count($messages) < 1) {
+            $messages = [
+                [
+                    'role' => 'user',
+                    'content' => $prompt,
+                ],
+            ];
+        } else {
+            $messages[] = [
+                'role' => 'user',
+                'content' => $prompt,
+            ];
+        }
+
         $approximateinput_tokens = TokenizerX::count($prompt);
 
         $gpt4_models = collect(['gpt-4-1106-preview', 'gpt-4-turbo-preview', 'gpt-4-0125-preview', 'gpt-4o']);

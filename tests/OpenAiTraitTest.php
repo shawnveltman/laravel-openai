@@ -314,3 +314,99 @@ test('get_openai_chat_completion throws OpenAi500ErrorException on 500 error', f
 
     $this->testClass->get_openai_chat_completion(messages: [['role' => 'user', 'content' => 'Hello, World!']]);
 });
+
+/** @test */
+test('it sends a correctly formatted request with messages', function () {
+    $testClass = new TestClass();
+
+    $prompt = 'Hello, World!';
+    $messages = [
+        ['role' => 'user', 'content' => 'Hello, World Test!'],
+    ];
+
+    // Configure the expected response from the OpenAI API
+    $fakeApiResponse = [
+        'choices' => [
+            [
+                'message' => [
+                    'content' => 'This is a fake response from OpenAI.',
+                ],
+                'finish_reason' => 'stop',
+            ],
+        ],
+    ];
+
+    // Fake the response to return the expected JSON above when the matching URL is called
+    Http::fake([
+        'api.openai.com/v1/chat/completions' => function ($request) use ($fakeApiResponse) {
+            // Assert that the request contains the correctly formatted messages
+            expect($request->data())->toMatchArray([
+                'model' => 'gpt-3.5-turbo',
+                'messages' => [
+                    ['role' => 'system', 'content' => 'You are a helpful assistant'],
+                    ['role' => 'user', 'content' => 'Hello, World Test!'],
+                    ['role' => 'user', 'content' => 'Hello, World!'],
+                ],
+                'temperature' => 0.7,
+                'max_tokens' => 4096,
+                'top_p' => 1,
+                'frequency_penalty' => 0,
+                'presence_penalty' => 0,
+            ]);
+
+            return Http::response($fakeApiResponse, 200);
+        },
+    ]);
+
+    // Call the method we're testing
+    $response = $testClass->get_response_from_prompt_and_context($prompt, messages: $messages);
+
+    // Assert the response matches our expectation
+    expect($response)->toEqual('This is a fake response from OpenAI.');
+});
+
+/** @test */
+test('it sends a correctly formatted request without messages', function () {
+    $testClass = new TestClass();
+
+    $prompt = 'Hello, World!';
+
+    // Configure the expected response from the OpenAI API
+    $fakeApiResponse = [
+        'choices' => [
+            [
+                'message' => [
+                    'content' => 'This is a fake response from OpenAI.',
+                ],
+                'finish_reason' => 'stop',
+            ],
+        ],
+    ];
+
+    // Fake the response to return the expected JSON above when the matching URL is called
+    Http::fake([
+        'api.openai.com/v1/chat/completions' => function ($request) use ($fakeApiResponse) {
+            // Assert that the request contains only the system message if no messages are provided
+            expect($request->data())->toMatchArray([
+                'model' => 'gpt-3.5-turbo',
+                'messages' => [
+                    ['role' => 'system', 'content' => 'You are a helpful assistant'],
+                    ['role' => 'user', 'content' => 'Hello, World!'],
+                ],
+                'temperature' => 0.7,
+                'max_tokens' => 4096,
+                'top_p' => 1,
+                'frequency_penalty' => 0,
+                'presence_penalty' => 0,
+            ]);
+
+            return Http::response($fakeApiResponse, 200);
+        },
+    ]);
+
+    // Call the method we're testing
+    $response = $testClass->get_response_from_prompt_and_context($prompt);
+
+    // Assert the response matches our expectation
+    expect($response)->toEqual('This is a fake response from OpenAI.');
+});
