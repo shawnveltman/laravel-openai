@@ -119,7 +119,7 @@ trait OpenAiTrait
         ?int $user_id = null,
         ?float $temperature = 0.7,
         int $retry_count = 0,
-        array   $messages = [],
+        array $messages = [],
     ): ?string {
 
         if (count($messages) < 1) {
