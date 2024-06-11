@@ -62,20 +62,19 @@ trait ClaudeTrait
 
         $retry_count = 0;
         while ($retry_count < $max_token_retry_attempts) {
-            $parameters            = [
-                'metadata'    => [
-                    'user_id' => (string)($user_id),
+            $parameters = [
+                'metadata' => [
+                    'user_id' => (string) ($user_id),
                 ],
-                'max_tokens'  => $max_tokens,
-                'model'       => $model,
-                'messages'    => $messages,
+                'max_tokens' => $max_tokens,
+                'model' => $model,
+                'messages' => $messages,
                 'temperature' => $temperature,
-                'top_p'       => $top_p,
-                'top_k'       => $top_k,
+                'top_p' => $top_p,
+                'top_k' => $top_k,
             ];
 
-            if($system_prompt)
-            {
+            if ($system_prompt) {
                 $parameters['system'] = $system_prompt;
             }
 
@@ -87,7 +86,7 @@ trait ClaudeTrait
                     'x-api-key' => config('ai_providers.anthropic_key'),
                 ])
                 ->post('https://api.anthropic.com/v1/messages', $parameters);
-            $response        = $response_object->json();
+            $response = $response_object->json();
 
             if (! $response_object->ok() && collect([429, 529])->contains($response_object->status())) {
                 throw new ClaudeRateLimitException;
