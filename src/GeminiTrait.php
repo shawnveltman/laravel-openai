@@ -23,6 +23,7 @@ trait GeminiTrait
         ?string $description = '',
         ?string $job_uuid = null,
         bool $json_mode = false,
+        array $messages = [],
     ): mixed {
         $formatted_prompt = $prompt;
         $api_key = config('ai_providers.gemini_key');
@@ -32,20 +33,34 @@ trait GeminiTrait
             'maxOutputTokens' => $max_tokens,
         ];
 
-        if ($json_mode) {
-            $generate_config['response_mime_type'] = 'application/json';
-        }
-
-        $body = [
-            'contents' => [
+        if (count($messages) < 1) {
+            $messages = [
                 [
                     'parts' => [
                         [
                             'text' => $prompt,
                         ],
                     ],
+                    'role' => 'user',
                 ],
-            ],
+            ];
+        } else {
+            $messages[] = [
+                'parts' => [
+                    [
+                        'text' => $prompt,
+                    ],
+                ],
+                'role' => 'user',
+            ];
+        }
+
+        if ($json_mode) {
+            $generate_config['response_mime_type'] = 'application/json';
+        }
+
+        $body = [
+            'contents' => $messages,
             'generationConfig' => $generate_config,
         ];
 
