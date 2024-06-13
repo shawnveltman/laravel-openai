@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.29.0 - 2024-06-13
+
+fixed fallback json on openai trait
+
 ## 1.27.0 - 2024-06-06
 
 minor update to claude trait to take in conversation arrays
