@@ -5,9 +5,9 @@ namespace Shawnveltman\LaravelOpenai;
 trait ProviderResponseTrait
 {
     use ClaudeTrait;
-    use OpenAiTrait;
-    use MistralTrait;
     use GeminiTrait;
+    use MistralTrait;
+    use OpenAiTrait;
 
     public function get_response_from_provider(
         string $prompt,
@@ -21,8 +21,7 @@ trait ProviderResponseTrait
         ?string $system_prompt = null,
         array $messages = [],
     ): mixed {
-        if (str_contains($model, 'gpt'))
-        {
+        if (str_contains($model, 'gpt')) {
             return $this->get_response_from_prompt_and_context(
                 prompt: $prompt,
                 model: $model,
@@ -32,8 +31,7 @@ trait ProviderResponseTrait
             );
         }
 
-        if (str_contains($model, 'mistral'))
-        {
+        if (str_contains($model, 'mistral')) {
             return $this->get_mistral_completion(
                 prompt: $prompt,
                 user_id: $user_id,
@@ -41,8 +39,7 @@ trait ProviderResponseTrait
             );
         }
 
-        if (str_contains($model, 'gemini'))
-        {
+        if (str_contains($model, 'gemini')) {
             return $this->get_gemini_response(
                 prompt: $prompt,
                 model: $model,

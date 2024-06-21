@@ -17,7 +17,7 @@ trait AssistantOpenAiTrait
     {
         $api_key = config('ai_providers.open_ai_key');
 
-        $url = $this->api_url . '/assistants';
+        $url = $this->api_url.'/assistants';
 
         $response = Http::withToken($api_key)
             ->withHeaders([
@@ -25,10 +25,10 @@ trait AssistantOpenAiTrait
             ])
             ->post($url, [
                 'instructions' => $instructions,
-                'description'  => $description,
-                'name'         => $name,
-                'tools'        => $parameters,
-                'model'        => $model,
+                'description' => $description,
+                'name' => $name,
+                'tools' => $parameters,
+                'model' => $model,
             ]);
 
         return $this->handle_response($response, 'Failed to create assistant');
@@ -39,7 +39,7 @@ trait AssistantOpenAiTrait
     {
         $api_key = config('ai_providers.open_ai_key');
 
-        $url = $this->api_url . '/assistants/' . $assistant_id;
+        $url = $this->api_url.'/assistants/'.$assistant_id;
 
         $response = Http::withToken($api_key)
             ->withHeaders([
@@ -54,7 +54,7 @@ trait AssistantOpenAiTrait
     public function delete_assistant(string $assistant_id): array
     {
         $api_key = config('ai_providers.open_ai_key');
-        $url     = $this->api_url . '/assistants/' . $assistant_id;
+        $url = $this->api_url.'/assistants/'.$assistant_id;
 
         $response = Http::withToken($api_key)
             ->withHeaders([
@@ -68,7 +68,7 @@ trait AssistantOpenAiTrait
     public function create_run_and_thread(string $assistant_id, string $prompt = '')
     {
         $api_key = config('ai_providers.open_ai_key');
-        $url     = $this->api_url . '/threads/runs';
+        $url = $this->api_url.'/threads/runs';
 
         $response = Http::withToken($api_key)
             ->withHeaders([
@@ -76,9 +76,9 @@ trait AssistantOpenAiTrait
             ])
             ->post($url, [
                 'assistant_id' => $assistant_id,
-                'thread'       => [
+                'thread' => [
                     'messages' => [[
-                        'role'    => 'user',
+                        'role' => 'user',
                         'content' => $prompt,
                     ]],
                 ],
@@ -90,7 +90,7 @@ trait AssistantOpenAiTrait
     public function get_run_from_run_id_and_thread_id($run_id, $thread_id)
     {
         $api_key = config('ai_providers.open_ai_key');
-        $url     = $this->api_url . "/threads/{$thread_id}/runs/{$run_id}";
+        $url = $this->api_url."/threads/{$thread_id}/runs/{$run_id}";
 
         $response = Http::withToken($api_key)
             ->withHeaders([
@@ -105,9 +105,8 @@ trait AssistantOpenAiTrait
     {
         $file_ids = [];
 
-        foreach ($files as $file)
-        {
-            $response   = $this->upload_file($file);
+        foreach ($files as $file) {
+            $response = $this->upload_file($file);
             $file_ids[] = $response['id'] ?? '';
         }
 
@@ -118,14 +117,14 @@ trait AssistantOpenAiTrait
     {
         $api_key = config('ai_providers.open_ai_key');
 
-        $file      = Storage::disk('base_path')->get($file_path);
+        $file = Storage::disk('base_path')->get($file_path);
         $file_name = basename($file_path);
 
         $response = Http::withToken($api_key)
             ->attach('file', $file, $file_name)
-            ->post($this->api_url . '/files', [
+            ->post($this->api_url.'/files', [
                 'purpose' => 'assistants',
-                'file'    => $file,
+                'file' => $file,
             ]);
 
         return $this->handle_response($response, 'Failed to upload file');
@@ -139,7 +138,7 @@ trait AssistantOpenAiTrait
             ->withHeaders([
                 'OpenAI-Beta' => 'assistants=v2',
             ])
-            ->post($this->api_url . '/vector_stores/' . $vector_store_id . '/file_batches', [
+            ->post($this->api_url.'/vector_stores/'.$vector_store_id.'/file_batches', [
                 'file_ids' => $file_ids,
             ]);
 
@@ -151,7 +150,7 @@ trait AssistantOpenAiTrait
     {
         $api_key = config('ai_providers.open_ai_key');
 
-        $url = $this->api_url . '/vector_stores';
+        $url = $this->api_url.'/vector_stores';
 
         $response = Http::withToken($api_key)
             ->withHeaders([
@@ -169,7 +168,7 @@ trait AssistantOpenAiTrait
     {
         $api_key = config('ai_providers.open_ai_key');
 
-        $url = $this->api_url . '/vector_stores/' . $vector_store_id;
+        $url = $this->api_url.'/vector_stores/'.$vector_store_id;
 
         $response = Http::withToken($api_key)
             ->withHeaders([
@@ -185,7 +184,7 @@ trait AssistantOpenAiTrait
     {
         $api_key = config('ai_providers.open_ai_key');
 
-        $url = $this->api_url . '/vector_stores/' . $vector_store_id;
+        $url = $this->api_url.'/vector_stores/'.$vector_store_id;
 
         $response = Http::withToken($api_key)
             ->withHeaders([
@@ -201,7 +200,7 @@ trait AssistantOpenAiTrait
     {
         $api_key = config('ai_providers.open_ai_key');
 
-        $url = $this->api_url . '/vector_stores/' . $vector_store_id;
+        $url = $this->api_url.'/vector_stores/'.$vector_store_id;
 
         $response = Http::withToken($api_key)
             ->withHeaders([
@@ -228,7 +227,7 @@ trait AssistantOpenAiTrait
     {
         $api_key = config('ai_providers.open_ai_key');
 
-        $url = $this->api_url . '/threads/' . $thread_id . '/messages';
+        $url = $this->api_url.'/threads/'.$thread_id.'/messages';
 
         $response = Http::withToken($api_key)
             ->withHeaders([
@@ -242,23 +241,20 @@ trait AssistantOpenAiTrait
     // Handle the response and throw appropriate exceptions
     protected function handle_response($response, $default_error_message)
     {
-        if ($response->successful())
-        {
+        if ($response->successful()) {
             return $response->json();
         }
 
-        if ($response->status() === 429)
-        {
+        if ($response->status() === 429) {
             throw new OpenAiRateLimitExceededException('OpenAI API rate limit exceeded.');
         }
 
-        if ($response->status() === 500)
-        {
+        if ($response->status() === 500) {
             throw new OpenAi500ErrorException('OpenAI API returned a 500 error.');
         }
 
         $response_json = $response->json();
 
-        throw new GeneralOpenAiException($default_error_message . ': ' . ($response_json['error']['message'] ?? 'Unknown error'));
+        throw new GeneralOpenAiException($default_error_message.': '.($response_json['error']['message'] ?? 'Unknown error'));
     }
 }

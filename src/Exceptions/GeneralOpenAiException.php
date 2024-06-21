@@ -4,6 +4,4 @@ namespace Shawnveltman\LaravelOpenai\Exceptions;
 
 use Exception;
 
-class GeneralOpenAiException extends Exception
-{
-}
+class GeneralOpenAiException extends Exception {}

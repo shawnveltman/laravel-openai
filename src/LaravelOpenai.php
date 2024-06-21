@@ -2,6 +2,4 @@
 
 namespace Shawnveltman\LaravelOpenai;
 
-class LaravelOpenai
-{
-}
+class LaravelOpenai {}

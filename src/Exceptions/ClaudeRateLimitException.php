@@ -4,6 +4,4 @@ namespace Shawnveltman\LaravelOpenai\Exceptions;
 
 use Exception;
 
-class ClaudeRateLimitException extends Exception
-{
-}
+class ClaudeRateLimitException extends Exception {}

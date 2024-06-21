@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Http;
 use Shawnveltman\LaravelOpenai\ProviderResponseTestClass;
 
-
 beforeEach(function () {
     $this->testClass = new ProviderResponseTestClass();
 });
@@ -33,7 +32,7 @@ it('gets a response from GPT model', function () {
         'api.openai.com/v1/chat/completions' => Http::response($fakeApiResponse, 200),
     ]);
 
-    $response = $this->testClass->get_response_from_provider(prompt: $prompt, model: $model , user_id: 1);
+    $response = $this->testClass->get_response_from_provider(prompt: $prompt, model: $model, user_id: 1);
 
     expect($response)->toEqual('Artificial Intelligence (AI) is...');
 });
@@ -44,7 +43,7 @@ it('gets a response from Mistral model', function () {
 
     Http::fake([
         'https://api.mistral.ai/v1/chat/completions' => Http::response([
-            'choices' => [['message' => ['content' => 'Mistral is a cutting-edge language model...' ]]]
+            'choices' => [['message' => ['content' => 'Mistral is a cutting-edge language model...']]],
         ], 200),
     ]);
 
@@ -111,7 +110,7 @@ it('gets a response from Gemini model', function () {
                 'generationConfig' => [
                     'temperature' => .7,
                     'maxOutputTokens' => 4096,
-                    'response_mime_type' => 'application/json'
+                    'response_mime_type' => 'application/json',
                 ],
             ]);
 
