@@ -23,7 +23,7 @@ trait ProviderResponseTrait
         ?string $system_prompt = null,
         array $messages = [],
     ): mixed {
-        if (str_contains($model, 'gpt')) {
+        if (Str::contains($model, 'gpt')) {
             return $this->get_response_from_prompt_and_context(
                 prompt: $prompt,
                 model: $model,
@@ -41,7 +41,7 @@ trait ProviderResponseTrait
             );
         }
 
-        if (str_contains($model, 'gemini')) {
+        if (Str::contains($model, 'gemini')) {
             return $this->get_gemini_response(
                 prompt: $prompt,
                 model: $model,
@@ -54,17 +54,22 @@ trait ProviderResponseTrait
             );
         }
 
-        return $this->get_claude_response(
-            prompt: $prompt,
-            model: $model,
-            temperature: $temperature,
-            assistant_starter_text: $assistant_starter_text,
-            user_id: $user_id,
-            messages: $messages,
-            description: $description,
-            job_uuid: $job_uuid,
-            json_mode: $json_mode,
-            system_prompt: $system_prompt,
-        );
+        if(Str::contains($model, 'claude'))
+        {
+            return $this->get_claude_response(
+                prompt: $prompt,
+                model: $model,
+                temperature: $temperature,
+                assistant_starter_text: $assistant_starter_text,
+                user_id: $user_id,
+                messages: $messages,
+                description: $description,
+                job_uuid: $job_uuid,
+                json_mode: $json_mode,
+                system_prompt: $system_prompt,
+            );
+        }
+
+        return null;
     }
 }
