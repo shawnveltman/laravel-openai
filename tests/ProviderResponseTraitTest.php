@@ -51,6 +51,37 @@ it('gets a response from Mistral model', function () {
 
     expect($response)->toEqual('Mistral is a cutting-edge language model...');
 });
+
+it('gets a response from Mistral mixtral model', function () {
+    $prompt = 'Explain Mistral';
+    $model = 'open-mixtral-8x7b';
+
+    Http::fake([
+        'https://api.mistral.ai/v1/chat/completions' => Http::response([
+            'choices' => [['message' => ['content' => 'Mistral is a cutting-edge language model...']]],
+        ], 200),
+    ]);
+
+    $response = $this->testClass->get_response_from_provider($prompt, $model);
+
+    expect($response)->toEqual('Mistral is a cutting-edge language model...');
+});
+
+it('gets a response from Mistral codestral model', function () {
+    $prompt = 'Explain Mistral';
+    $model = 'codestral-latest';
+
+    Http::fake([
+        'https://api.mistral.ai/v1/chat/completions' => Http::response([
+            'choices' => [['message' => ['content' => 'Mistral is a cutting-edge language model...']]],
+        ], 200),
+    ]);
+
+    $response = $this->testClass->get_response_from_provider($prompt, $model);
+
+    expect($response)->toEqual('Mistral is a cutting-edge language model...');
+});
+
 it('gets a response from Gemini model', function () {
     $model = 'gemini-1.5-flash-latest';
     $prompt = 'Hello, World!';

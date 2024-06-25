@@ -2,6 +2,8 @@
 
 namespace Shawnveltman\LaravelOpenai;
 
+use Illuminate\Support\Str;
+
 trait ProviderResponseTrait
 {
     use ClaudeTrait;
@@ -31,7 +33,7 @@ trait ProviderResponseTrait
             );
         }
 
-        if (str_contains($model, 'mistral')) {
+        if (Str::contains($model, ['mistral','codestral','mixtral'])) {
             return $this->get_mistral_completion(
                 prompt: $prompt,
                 user_id: $user_id,
