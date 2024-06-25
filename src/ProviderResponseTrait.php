@@ -33,7 +33,7 @@ trait ProviderResponseTrait
             );
         }
 
-        if (Str::contains($model, ['mistral','codestral','mixtral'])) {
+        if (Str::contains($model, ['mistral', 'codestral', 'mixtral'])) {
             return $this->get_mistral_completion(
                 prompt: $prompt,
                 user_id: $user_id,
