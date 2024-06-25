@@ -54,8 +54,7 @@ trait ProviderResponseTrait
             );
         }
 
-        if(Str::contains($model, 'claude'))
-        {
+        if (Str::contains($model, 'claude')) {
             return $this->get_claude_response(
                 prompt: $prompt,
                 model: $model,
