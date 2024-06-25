@@ -15,7 +15,7 @@ trait MistralTrait
         string $context = 'You are a helpful assistant',
         string $model = 'mistral-small-latest')
     {
-        $messages = $this->generate_chat_array_from_input_prompt($prompt);
+        $messages = $this->mistral_generate_chat_array_from_input_prompt($prompt);
         $final_messages = collect([
             ['role' => 'system', 'content' => $context],
         ])
@@ -33,7 +33,7 @@ trait MistralTrait
 
         $response_json = $response->json();
         if ($response->ok()) {
-            $this->attempt_log_prompt($user_id, $response_json, $model);
+            $this->attempt_mistral_log_prompt($user_id, $response_json, $model);
 
             return $response_json['choices'][0]['message']['content'];
         }
@@ -41,7 +41,7 @@ trait MistralTrait
         return [];
     }
 
-    public function generate_chat_array_from_input_prompt(string $message): array
+    public function mistral_generate_chat_array_from_input_prompt(string $message): array
     {
         return [
             [
@@ -51,7 +51,7 @@ trait MistralTrait
         ];
     }
 
-    public function log_prompt(?int $user_id, mixed $raw_response, string $model): void
+    public function mistral_log_prompt(?int $user_id, mixed $raw_response, string $model): void
     {
         if ($user_id) {
             CostLog::create([
@@ -65,10 +65,10 @@ trait MistralTrait
         }
     }
 
-    private function attempt_log_prompt(?int $user_id, $raw_response, string $model): void
+    private function attempt_mistral_log_prompt(?int $user_id, $raw_response, string $model): void
     {
         try {
-            $this->log_prompt($user_id, $raw_response, $model);
+            $this->mistral_log_prompt($user_id, $raw_response, $model);
         } catch (Exception $e) {
             Log::error('CostLog creation failed: '.$e->getMessage());
         }
