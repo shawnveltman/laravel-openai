@@ -17,7 +17,7 @@ trait GeminiTrait
         string $prompt,
         string $model = 'gemini-1.5-flash-latest',
         int $max_tokens = 4096,
-        float $temperature = 1,
+        float $temperature = 0.7,
         int $timeout_seconds = 600,
         ?int $user_id = null,
         ?string $description = '',

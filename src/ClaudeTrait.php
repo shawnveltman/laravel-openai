@@ -21,7 +21,7 @@ trait ClaudeTrait
         string $prompt,
         string $model = 'claude-3-opus-20240229',
         int $max_tokens = 4096,
-        int $temperature = 1,
+        float $temperature = 0.7,
         float $top_p = 0.7,
         int $top_k = 5,
         int $iteration = 1,
