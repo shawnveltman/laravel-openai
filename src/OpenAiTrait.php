@@ -136,8 +136,6 @@ trait OpenAiTrait
             ];
         }
 
-        $approximateinput_tokens = TokenizerX::count($prompt);
-
         $approximate_output_max_tokens = $this->get_max_output_tokens($model);
 
         if ($approximate_output_max_tokens < 0) {
