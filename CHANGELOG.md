@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.32.0 - 2024-08-16
+
+Updated output tokens on openai models
+
 ## 1.29.0 - 2024-06-13
 
 fixed fallback json on openai trait
