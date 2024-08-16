@@ -133,8 +133,8 @@ test('get_max_output_tokens returns the correct token count based on model', fun
     $gpt3Result = $this->testClass->get_max_output_tokens($gpt3Model);
     $gpt4Result = $this->testClass->get_max_output_tokens($gpt4Model);
 
-    expect($gpt3Result)->toEqual(16000);
-    expect($gpt4Result)->toEqual(8000);
+    expect($gpt3Result)->toEqual(16384);
+    expect($gpt4Result)->toEqual(4096);
 });
 
 // Test for get_whisper_transcription
@@ -348,7 +348,7 @@ test('it sends a correctly formatted request with messages', function () {
                     ['role' => 'user', 'content' => 'Hello, World!'],
                 ],
                 'temperature' => 0.7,
-                'max_tokens' => 4096,
+                'max_tokens' => 16384,
                 'top_p' => 1,
                 'frequency_penalty' => 0,
                 'presence_penalty' => 0,
@@ -394,7 +394,7 @@ test('it sends a correctly formatted request without messages', function () {
                     ['role' => 'user', 'content' => 'Hello, World!'],
                 ],
                 'temperature' => 0.7,
-                'max_tokens' => 4096,
+                'max_tokens' => 16384,
                 'top_p' => 1,
                 'frequency_penalty' => 0,
                 'presence_penalty' => 0,

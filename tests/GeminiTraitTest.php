@@ -71,7 +71,7 @@ test('it sends a correctly formatted request with messages', function () {
                     ],
                 ],
                 'generationConfig' => [
-                    'temperature' => 1,
+                    'temperature' => 0.7,
                     'maxOutputTokens' => 4096,
                 ],
             ]);
@@ -128,7 +128,7 @@ test('it sends a correctly formatted request without messages', function () {
                     ],
                 ],
                 'generationConfig' => [
-                    'temperature' => 1,
+                    'temperature' => 0.7,
                     'maxOutputTokens' => 4096,
                 ],
             ]);

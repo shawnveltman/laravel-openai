@@ -138,12 +138,7 @@ trait OpenAiTrait
 
         $approximateinput_tokens = TokenizerX::count($prompt);
 
-        $gpt4_models = collect(['gpt-4-1106-preview', 'gpt-4-turbo-preview', 'gpt-4-0125-preview', 'gpt-4o']);
-        if ($gpt4_models->contains($model)) {
-            $approximate_output_max_tokens = 4096;
-        } else {
-            $approximate_output_max_tokens = min(4096, $this->get_max_output_tokens($model) - $approximateinput_tokens);
-        }
+        $approximate_output_max_tokens = $this->get_max_output_tokens($model);
 
         if ($approximate_output_max_tokens < 0) {
             return null;
@@ -222,15 +217,22 @@ EOD;
 
     public function get_max_output_tokens(string $model = 'gpt-3.5-turbo'): int
     {
-        if (Str::contains($model, 'gpt-4')) {
-            return 8000;
+        switch ($model) {
+            case 'gpt-4o-2024-08-06':
+            case 'chatgpt-4o-latest':
+            case 'gpt-4o-mini':
+            case 'gpt-4o-mini-2024-07-18':
+            case 'gpt-3.5-turbo':
+            case 'babbage-002':
+            case 'davinci-002':
+                return 16384;
+            case 'gpt-4':
+            case 'gpt-4-0613':
+            case 'gpt-4-0314':
+                return 8192;
+            default:
+                return 4096; // Default for most models, including gpt-3.5-turbo and gpt-4-turbo variants
         }
-
-        if (Str::contains($model, ['gpt-3.5-turbo'])) {
-            return 16000;
-        }
-
-        return 3900;
     }
 
     public function get_whisper_transcription(
