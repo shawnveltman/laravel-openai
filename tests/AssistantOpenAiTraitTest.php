@@ -7,7 +7,7 @@ use Shawnveltman\LaravelOpenai\Exceptions\OpenAi500ErrorException;
 use Shawnveltman\LaravelOpenai\Exceptions\OpenAiRateLimitExceededException;
 
 beforeEach(function (): void {
-    $this->traitObject = new class()
+    $this->traitObject = new class
     {
         use AssistantOpenAiTrait;
     };

@@ -15,11 +15,11 @@ uses(WithFaker::class);
 
 beforeEach(function () {
     // Initialize the class that uses OpenAiTrait if necessary.
-    $this->testClass = new TestClass();
+    $this->testClass = new TestClass;
 });
 
 test('get_openai_chat_completion returns the expected response', function () {
-    $testClass = new TestClass();
+    $testClass = new TestClass;
 
     // configure the expected response from the OpenAI API
     $fakeApiResponse = [
@@ -54,7 +54,7 @@ test('get_openai_chat_completion returns the expected response', function () {
 });
 
 test('it handles and logs the response correctly', function () {
-    $testClass = new TestClass();
+    $testClass = new TestClass;
 
     // Configure the expected response and the fake Http response
     $fakeApiResponse = [
@@ -317,7 +317,7 @@ test('get_openai_chat_completion throws OpenAi500ErrorException on 500 error', f
 
 /** @test */
 test('it sends a correctly formatted request with messages', function () {
-    $testClass = new TestClass();
+    $testClass = new TestClass;
 
     $prompt = 'Hello, World!';
     $messages = [
@@ -367,7 +367,7 @@ test('it sends a correctly formatted request with messages', function () {
 
 /** @test */
 test('it sends a correctly formatted request without messages', function () {
-    $testClass = new TestClass();
+    $testClass = new TestClass;
 
     $prompt = 'Hello, World!';
 

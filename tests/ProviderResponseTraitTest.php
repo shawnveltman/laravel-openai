@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Http;
 use Shawnveltman\LaravelOpenai\ProviderResponseTestClass;
 
 beforeEach(function () {
-    $this->testClass = new ProviderResponseTestClass();
+    $this->testClass = new ProviderResponseTestClass;
 });
 
 it('gets a response from GPT model', function () {

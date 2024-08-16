@@ -11,7 +11,7 @@ uses(WithFaker::class);
 
 beforeEach(function () {
     // Initialize the class that uses ClaudeTrait if necessary.
-    $this->testClass = new ClaudeTestClass();
+    $this->testClass = new ClaudeTestClass;
 });
 
 // Test for get_claude_response

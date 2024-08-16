@@ -9,12 +9,12 @@ uses(WithFaker::class);
 
 beforeEach(function () {
     // Initialize the class that uses OpenAiTrait if necessary.
-    $this->testClass = new GeminiTestClass();
+    $this->testClass = new GeminiTestClass;
 });
 
 /** @test */
 test('it sends a correctly formatted request with messages', function () {
-    $testClass = new TestClass();
+    $testClass = new TestClass;
 
     $prompt = 'Hello, World!';
     $messages = [
@@ -89,7 +89,7 @@ test('it sends a correctly formatted request with messages', function () {
 
 /** @test */
 test('it sends a correctly formatted request without messages', function () {
-    $testClass = new TestClass();
+    $testClass = new TestClass;
 
     $prompt = 'Hello, World!';
 

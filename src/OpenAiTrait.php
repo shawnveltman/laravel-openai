@@ -6,8 +6,6 @@ use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Rajentrivedi\TokenizerX\TokenizerX;
 use Shawnveltman\LaravelOpenai\Exceptions\GeneralOpenAiException;
 use Shawnveltman\LaravelOpenai\Exceptions\OpenAi500ErrorException;
 use Shawnveltman\LaravelOpenai\Exceptions\OpenAiRateLimitExceededException;
