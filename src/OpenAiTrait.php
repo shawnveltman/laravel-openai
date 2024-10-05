@@ -41,7 +41,6 @@ trait OpenAiTrait
         $instructions_array = [
             'model' => $model,
             'messages' => $final_messages,
-            'max_completion_tokens' => $max_tokens,
         ];
 
         if (!$is_o1_model) {
