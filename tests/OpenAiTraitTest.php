@@ -348,7 +348,7 @@ test('it sends a correctly formatted request with messages', function () {
                     ['role' => 'user', 'content' => 'Hello, World!'],
                 ],
                 'temperature' => 0.7,
-                'max_tokens' => 16384,
+                'max_completion_tokens' => 16384,
                 'top_p' => 1,
                 'frequency_penalty' => 0,
                 'presence_penalty' => 0,
@@ -394,7 +394,7 @@ test('it sends a correctly formatted request without messages', function () {
                     ['role' => 'user', 'content' => 'Hello, World!'],
                 ],
                 'temperature' => 0.7,
-                'max_tokens' => 16384,
+                'max_completion_tokens' => 16384,
                 'top_p' => 1,
                 'frequency_penalty' => 0,
                 'presence_penalty' => 0,
@@ -409,4 +409,140 @@ test('it sends a correctly formatted request without messages', function () {
 
     // Assert the response matches our expectation
     expect($response)->toEqual('This is a fake response from OpenAI.');
+});
+
+test('get_openai_chat_completion handles O1 model correctly', function () {
+    $testClass = new TestClass;
+
+    $messages = [
+        ['role' => 'user', 'content' => 'Hello, O1!'],
+    ];
+
+    $fakeApiResponse = [
+        'choices' => [
+            [
+                'message' => [
+                    'content' => 'This is a fake response from O1.',
+                ],
+                'finish_reason' => 'stop',
+            ],
+        ],
+    ];
+
+    Http::fake([
+        'api.openai.com/v1/chat/completions' => function ($request) use ($fakeApiResponse) {
+            $data = $request->data();
+
+            // Check that system message is not included
+            expect($data['messages'])->not->toContain(function ($message) {
+                return $message['role'] === 'system';
+            });
+
+            // Check that temperature, top_p, frequency_penalty, and presence_penalty are not included
+            expect($data)->not->toHaveKeys(['temperature', 'top_p', 'frequency_penalty', 'presence_penalty']);
+
+            return Http::response($fakeApiResponse, 200);
+        },
+    ]);
+
+    $response = $testClass->get_openai_chat_completion(
+        messages: $messages,
+        model: 'o1-model'
+    );
+
+    expect($response)->toEqual($fakeApiResponse);
+});
+
+test('get_openai_chat_completion handles non-O1 model correctly', function () {
+    $testClass = new TestClass;
+
+    $messages = [
+        ['role' => 'user', 'content' => 'Hello, GPT!'],
+    ];
+
+    $fakeApiResponse = [
+        'choices' => [
+            [
+                'message' => [
+                    'content' => 'This is a fake response from GPT.',
+                ],
+                'finish_reason' => 'stop',
+            ],
+        ],
+    ];
+
+    Http::fake([
+        'api.openai.com/v1/chat/completions' => function ($request) use ($fakeApiResponse) {
+            $data = $request->data();
+
+            // Check that system message is included
+            expect($data['messages'])->toBeArray()
+                ->and($data['messages'])->toHaveCount(2)
+                ->and($data['messages'][0]['role'])->toBe('system')
+                ->and($data['messages'][1]['role'])->toBe('user')
+                ->and($data['messages'][1]['content'])->toBe('Hello, GPT!')
+                ->and($data)->toHaveKeys(['temperature', 'top_p', 'frequency_penalty', 'presence_penalty']);
+
+            // Check that temperature, top_p, frequency_penalty, and presence_penalty are included
+
+            return Http::response($fakeApiResponse, 200);
+        },
+    ]);
+
+    $response = $testClass->get_openai_chat_completion(
+        messages: $messages,
+        model: 'gpt-3.5-turbo'
+    );
+
+    expect($response)->toEqual($fakeApiResponse);
+});
+
+test('get_openai_chat_completion handles json_mode correctly for O1 and non-O1 models', function () {
+    $testClass = new TestClass;
+
+    $messages = [
+        ['role' => 'user', 'content' => 'Hello!'],
+    ];
+
+    $fakeApiResponse = [
+        'choices' => [
+            [
+                'message' => [
+                    'content' => '{"response": "This is a fake JSON response."}',
+                ],
+                'finish_reason' => 'stop',
+            ],
+        ],
+    ];
+
+    Http::fake([
+        'api.openai.com/v1/chat/completions' => function ($request) use ($fakeApiResponse) {
+            $data = $request->data();
+
+            if (Str::startsWith($data['model'], 'o1')) {
+                expect($data)->not->toHaveKey('response_format');
+            } else {
+                expect($data)->toHaveKey('response_format.type', 'json_object');
+            }
+
+            return Http::response($fakeApiResponse, 200);
+        },
+    ]);
+
+    // Test with O1 model
+    $responseO1 = $testClass->get_openai_chat_completion(
+        messages: $messages,
+        model: 'o1-model',
+        json_mode: true
+    );
+
+    // Test with non-O1 model
+    $responseNonO1 = $testClass->get_openai_chat_completion(
+        messages: $messages,
+        model: 'gpt-3.5-turbo',
+        json_mode: true
+    );
+
+    expect($responseO1)->toEqual($fakeApiResponse)
+        ->and($responseNonO1)->toEqual($fakeApiResponse);
 });

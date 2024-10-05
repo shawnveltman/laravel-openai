@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Shawnveltman\LaravelOpenai\Exceptions\GeneralOpenAiException;
 use Shawnveltman\LaravelOpenai\Exceptions\OpenAi500ErrorException;
 use Shawnveltman\LaravelOpenai\Exceptions\OpenAiRateLimitExceededException;
@@ -16,48 +17,49 @@ trait OpenAiTrait
     public ?string $latest_stop_reason = null;
 
     public function get_openai_chat_completion(
-        array   $messages,
-        float   $temperature = 0.7,
-        int     $max_tokens = 840,
-        float   $top_p = 1,
-        float   $frequency_penalty = 0,
-        float   $presence_penalty = 0,
-        string  $model = 'gpt-3.5-turbo',
-        string  $role_context = 'You are a helpful assistant.',
-        int     $timeout_in_seconds = 600,
-        ?array  $function_definition = null,
-        bool    $json_mode = false,
+        array $messages,
+        float $temperature = 0.7,
+        int $max_tokens = 840,
+        float $top_p = 1,
+        float $frequency_penalty = 0,
+        float $presence_penalty = 0,
+        string $model = 'gpt-3.5-turbo',
+        string $role_context = 'You are a helpful assistant.',
+        int $timeout_in_seconds = 600,
+        ?array $function_definition = null,
+        bool $json_mode = false,
         ?string $user_identifier = null,
-    )
-    {
-        $final_messages = collect([
-            ['role' => 'system', 'content' => $role_context],
-        ])
-            ->concat($messages)
-            ->toArray();
+    ) {
+        $is_o1_model = Str::startsWith($model, 'o1');
+
+        $final_messages = collect([]);
+        if (!$is_o1_model) {
+            $final_messages->push(['role' => 'system', 'content' => $role_context]);
+        }
+        $final_messages = $final_messages->concat($messages)->toArray();
 
         $instructions_array = [
-            'model'             => $model,
-            'messages'          => $final_messages,
-            'temperature'       => $temperature,
-            'max_tokens'        => $max_tokens,
-            'top_p'             => $top_p,
-            'frequency_penalty' => $frequency_penalty,
-            'presence_penalty'  => $presence_penalty,
+            'model' => $model,
+            'messages' => $final_messages,
+            'max_completion_tokens' => $max_tokens,
         ];
 
-        if ($json_mode)
-        {
+        if (!$is_o1_model) {
+            $instructions_array['temperature'] = $temperature;
+            $instructions_array['top_p'] = $top_p;
+            $instructions_array['frequency_penalty'] = $frequency_penalty;
+            $instructions_array['presence_penalty'] = $presence_penalty;
+        }
+
+        if ($json_mode && !$is_o1_model) {
             $instructions_array['response_format'] = ['type' => 'json_object'];
         }
 
-        if ($function_definition)
-        {
+        if ($function_definition) {
             $instructions_array['functions'] = $function_definition;
         }
 
-        if ($user_identifier)
-        {
+        if ($user_identifier) {
             $instructions_array['user'] = $user_identifier;
         }
 
@@ -68,11 +70,9 @@ trait OpenAiTrait
                 data: $instructions_array
             );
 
-        if ($response->ok())
-        {
+        if ($response->ok()) {
             $response_json = $response->json();
-            if ($response['choices'][0]['finish_reason'] === 'length')
-            {
+            if ($response['choices'][0]['finish_reason'] === 'length') {
                 $this->latest_stop_reason = 'length';
 
                 return $response_json;
@@ -81,13 +81,11 @@ trait OpenAiTrait
             return $response->json();
         }
 
-        if ($response->status() === 429)
-        {
+        if ($response->status() === 429) {
             throw new OpenAiRateLimitExceededException('OpenAI API rate limit exceeded.');
         }
 
-        if ($response->status() === 500)
-        {
+        if ($response->status() === 500) {
             throw new OpenAi500ErrorException('OpenAI API returned a 500 error.');
         }
 
