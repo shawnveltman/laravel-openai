@@ -23,7 +23,7 @@ trait ProviderResponseTrait
         ?string $system_prompt = null,
         array $messages = [],
     ): mixed {
-        if (Str::contains($model, ['gpt','o1'])) {
+        if (Str::contains($model, ['gpt', 'o1'])) {
             return $this->get_response_from_prompt_and_context(
                 prompt: $prompt,
                 model: $model,
