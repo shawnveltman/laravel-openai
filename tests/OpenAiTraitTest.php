@@ -25,7 +25,7 @@ test('get_openai_chat_completion returns the expected response', function () {
     $fakeApiResponse = [
         'choices' => [
             [
-                'message'       => [
+                'message' => [
                     'content' => 'This is a fake response from OpenAI.',
                 ],
                 'finish_reason' => 'stop',
@@ -58,17 +58,17 @@ test('it handles and logs the response correctly', function () {
 
     // Configure the expected response and the fake Http response
     $fakeApiResponse = [
-        'id'      => 'example-id',
+        'id' => 'example-id',
         'choices' => [
             [
-                'message'       => [
+                'message' => [
                     'content' => 'Fake response for logging.',
                 ],
                 'finish_reason' => 'stop',
             ],
         ],
-        'usage'   => [
-            'prompt_tokens'     => 100,
+        'usage' => [
+            'prompt_tokens' => 100,
             'completion_tokens' => 150,
         ],
     ];
@@ -83,12 +83,12 @@ test('it handles and logs the response correctly', function () {
 
     // Verify that the `CostLog` is written to the database with the correct details
     $this->assertDatabaseHas('cost_logs', [
-        'user_id'           => 1,
+        'user_id' => 1,
         'prompt_identifier' => 'example-id',
-        'model'             => 'gpt-3.5-turbo',
-        'service'           => 'OpenAI',
-        'input_tokens'      => 100,
-        'output_tokens'     => 150,
+        'model' => 'gpt-3.5-turbo',
+        'service' => 'OpenAI',
+        'input_tokens' => 100,
+        'output_tokens' => 150,
     ]);
 });
 
@@ -112,10 +112,10 @@ test('get_openai_moderation returns the expected moderation response', function 
 
 // Test for generate_chat_array_from_input_prompt
 test('generate_chat_array_from_input_prompt returns a correct chat array', function () {
-    $inputPrompt    = 'Hello, OpenAI!';
+    $inputPrompt = 'Hello, OpenAI!';
     $expectedOutput = [
         [
-            'role'    => 'user',
+            'role' => 'user',
             'content' => $inputPrompt,
         ],
     ];
@@ -243,7 +243,7 @@ test('clean_json_string returns the JSON portion of the string even if malformed
 
 // Test for get_corrected_json_from_response returning an array after correcting JSON
 test('get_corrected_json_from_response returns array after correcting malformed JSON', function () {
-    $invalidJson       = '{"key": "value",}'; // Malformed JSON with trailing comma
+    $invalidJson = '{"key": "value",}'; // Malformed JSON with trailing comma
     $expectedFixedJson = '{"key": "value"}';  // The fixed version without trailing comma
 
     $result = $this->testClass->get_corrected_json_from_response($invalidJson);
@@ -264,16 +264,16 @@ it('ensures attempt_log_prompt logs an error when log_prompt fails', function ()
             'choices' => [
                 ['message' => ['content' => 'Response from OpenAI'], 'finish_reason' => 'stop'],
             ],
-            'id'      => 'fake_id',
-            'usage'   => [
-                'prompt_tokens'     => 10,
+            'id' => 'fake_id',
+            'usage' => [
+                'prompt_tokens' => 10,
                 'completion_tokens' => 5,
             ],
         ], 200),
     ]);
 
     // Setup a listener to hear the model created event and throw an exception when it's heard
-    Event::listen('eloquent.created: ' . CostLog::class, function () {
+    Event::listen('eloquent.created: '.CostLog::class, function () {
         throw new Exception('Database write failed');
     });
 
@@ -289,7 +289,7 @@ it('ensures attempt_log_prompt logs an error when log_prompt fails', function ()
     expect($response)->toBe('Response from OpenAI');
 
     // After the test, remove the event listener to avoid affecting subsequent tests
-    Event::forget('eloquent.created: ' . CostLog::class);
+    Event::forget('eloquent.created: '.CostLog::class);
 });
 
 test('get_openai_chat_completion throws OpenAiRateLimitExceededException on 429 error', function () {
@@ -319,7 +319,7 @@ test('get_openai_chat_completion throws OpenAi500ErrorException on 500 error', f
 test('it sends a correctly formatted request with messages', function () {
     $testClass = new TestClass;
 
-    $prompt   = 'Hello, World!';
+    $prompt = 'Hello, World!';
     $messages = [
         ['role' => 'user', 'content' => 'Hello, World Test!'],
     ];
@@ -328,7 +328,7 @@ test('it sends a correctly formatted request with messages', function () {
     $fakeApiResponse = [
         'choices' => [
             [
-                'message'       => [
+                'message' => [
                     'content' => 'This is a fake response from OpenAI.',
                 ],
                 'finish_reason' => 'stop',
@@ -341,16 +341,16 @@ test('it sends a correctly formatted request with messages', function () {
         'api.openai.com/v1/chat/completions' => function ($request) use ($fakeApiResponse) {
             // Assert that the request contains the correctly formatted messages
             expect($request->data())->toMatchArray([
-                'model'       => 'gpt-3.5-turbo',
-                'messages'    => [
+                'model' => 'gpt-3.5-turbo',
+                'messages' => [
                     ['role' => 'system', 'content' => 'You are a helpful assistant'],
                     ['role' => 'user', 'content' => 'Hello, World Test!'],
                     ['role' => 'user', 'content' => 'Hello, World!'],
                 ],
                 'temperature' => 0.7,
-                'top_p'             => 1,
+                'top_p' => 1,
                 'frequency_penalty' => 0,
-                'presence_penalty'  => 0,
+                'presence_penalty' => 0,
             ]);
 
             return Http::response($fakeApiResponse, 200);
@@ -374,7 +374,7 @@ test('it sends a correctly formatted request without messages', function () {
     $fakeApiResponse = [
         'choices' => [
             [
-                'message'       => [
+                'message' => [
                     'content' => 'This is a fake response from OpenAI.',
                 ],
                 'finish_reason' => 'stop',
@@ -387,15 +387,15 @@ test('it sends a correctly formatted request without messages', function () {
         'api.openai.com/v1/chat/completions' => function ($request) use ($fakeApiResponse) {
             // Assert that the request contains only the system message if no messages are provided
             expect($request->data())->toMatchArray([
-                'model'       => 'gpt-3.5-turbo',
-                'messages'    => [
+                'model' => 'gpt-3.5-turbo',
+                'messages' => [
                     ['role' => 'system', 'content' => 'You are a helpful assistant'],
                     ['role' => 'user', 'content' => 'Hello, World!'],
                 ],
                 'temperature' => 0.7,
-                'top_p'             => 1,
+                'top_p' => 1,
                 'frequency_penalty' => 0,
-                'presence_penalty'  => 0,
+                'presence_penalty' => 0,
             ]);
 
             return Http::response($fakeApiResponse, 200);
@@ -419,7 +419,7 @@ test('get_openai_chat_completion handles O1 model correctly', function () {
     $fakeApiResponse = [
         'choices' => [
             [
-                'message'       => [
+                'message' => [
                     'content' => 'This is a fake response from O1.',
                 ],
                 'finish_reason' => 'stop',
@@ -461,7 +461,7 @@ test('get_openai_chat_completion handles non-O1 model correctly', function () {
     $fakeApiResponse = [
         'choices' => [
             [
-                'message'       => [
+                'message' => [
                     'content' => 'This is a fake response from GPT.',
                 ],
                 'finish_reason' => 'stop',
@@ -505,7 +505,7 @@ test('get_openai_chat_completion handles json_mode correctly for O1 and non-O1 m
     $fakeApiResponse = [
         'choices' => [
             [
-                'message'       => [
+                'message' => [
                     'content' => '{"response": "This is a fake JSON response."}',
                 ],
                 'finish_reason' => 'stop',
@@ -517,11 +517,9 @@ test('get_openai_chat_completion handles json_mode correctly for O1 and non-O1 m
         'api.openai.com/v1/chat/completions' => function ($request) use ($fakeApiResponse) {
             $data = $request->data();
 
-            if (Str::startsWith($data['model'], 'o1'))
-            {
+            if (Str::startsWith($data['model'], 'o1')) {
                 expect($data)->not->toHaveKey('response_format');
-            } else
-            {
+            } else {
                 expect($data)->toHaveKey('response_format.type', 'json_object');
             }
 
