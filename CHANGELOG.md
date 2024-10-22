@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.36.0 - 2024-10-22
+
+Updated default claude model
+
 ## 1.35.0 - 2024-10-05
 
 Removed max completion tokens
