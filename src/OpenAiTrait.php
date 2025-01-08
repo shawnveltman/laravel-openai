@@ -47,7 +47,7 @@ trait OpenAiTrait
                 if (is_string($message['content'])) {
                     $content[] = [
                         'type' => 'text',
-                        'text' => $message['content']
+                        'text' => $message['content'],
                     ];
                 }
 
@@ -75,11 +75,11 @@ trait OpenAiTrait
                             'type' => 'image_url',
                             'image_url' => [
                                 'url' => $imageUrl,
-                                'detail' => 'auto'
-                            ]
+                                'detail' => 'auto',
+                            ],
                         ];
                     } catch (Exception $e) {
-                        Log::error('Failed to process image: ' . $e->getMessage());
+                        Log::error('Failed to process image: '.$e->getMessage());
                     }
                 }
 
@@ -141,7 +141,6 @@ trait OpenAiTrait
         $response_json = $response->json();
         throw new GeneralOpenAiException('OpenAI API returned an error that was neither 429 nor 500.');
     }
-
 
     public function get_openai_moderation($prompt)
     {
