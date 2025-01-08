@@ -29,6 +29,7 @@ trait OpenAiTrait
         ?array $function_definition = null,
         bool $json_mode = false,
         ?string $user_identifier = null,
+        array $image_urls = [],
     ) {
         $is_o1_model = Str::startsWith($model, 'o1');
 
@@ -36,11 +37,60 @@ trait OpenAiTrait
         if (! $is_o1_model) {
             $final_messages->push(['role' => 'system', 'content' => $role_context]);
         }
-        $final_messages = $final_messages->concat($messages)->toArray();
+
+        // Process messages to include images if they exist
+        foreach ($messages as $message) {
+            if ($message['role'] === 'user' && count($image_urls) > 0) {
+                $content = [];
+
+                // Add the text content if it exists
+                if (is_string($message['content'])) {
+                    $content[] = [
+                        'type' => 'text',
+                        'text' => $message['content']
+                    ];
+                }
+
+                // Add images
+                foreach ($image_urls as $url) {
+                    try {
+                        if (Str::startsWith($url, 'data:image')) {
+                            // If it's already a base64 data URL, use it directly
+                            $imageUrl = $url;
+                        } else {
+                            // Download and encode the image
+                            $imageData = base64_encode(file_get_contents($url));
+                            $extension = pathinfo($url, PATHINFO_EXTENSION);
+                            $mimeType = match (strtolower($extension)) {
+                                'jpg', 'jpeg' => 'image/jpeg',
+                                'png' => 'image/png',
+                                'gif' => 'image/gif',
+                                'webp' => 'image/webp',
+                                default => 'image/jpeg',
+                            };
+                            $imageUrl = "data:{$mimeType};base64,{$imageData}";
+                        }
+
+                        $content[] = [
+                            'type' => 'image_url',
+                            'image_url' => [
+                                'url' => $imageUrl,
+                                'detail' => 'auto'
+                            ]
+                        ];
+                    } catch (Exception $e) {
+                        Log::error('Failed to process image: ' . $e->getMessage());
+                    }
+                }
+
+                $message['content'] = $content;
+            }
+            $final_messages->push($message);
+        }
 
         $instructions_array = [
             'model' => $model,
-            'messages' => $final_messages,
+            'messages' => $final_messages->toArray(),
         ];
 
         if (! $is_o1_model) {
@@ -92,6 +142,7 @@ trait OpenAiTrait
         throw new GeneralOpenAiException('OpenAI API returned an error that was neither 429 nor 500.');
     }
 
+
     public function get_openai_moderation($prompt)
     {
         return Http::withToken(config('ai_providers.open_ai_key'))
@@ -123,6 +174,7 @@ trait OpenAiTrait
         ?float $temperature = 0.7,
         int $retry_count = 0,
         array $messages = [],
+        array $image_urls = [],
     ): ?string {
 
         if (count($messages) < 1) {
@@ -160,6 +212,7 @@ trait OpenAiTrait
             function_definition: $function_definition,
             json_mode: $json_mode,
             user_identifier: $user_identifier,
+            image_urls: $image_urls,
         );
         $this->attempt_log_prompt($user_id, $raw_response, $model);
 
@@ -198,6 +251,7 @@ EOD;
                     function_definition: $function_definition,
                     json_mode: false,
                     user_identifier: $user_identifier,
+                    image_urls: $image_urls,
                 );
 
                 $second_response_text = $continued_response['choices'][0]['message']['content'] ?? null;

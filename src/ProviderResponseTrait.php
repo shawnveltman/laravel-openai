@@ -22,6 +22,7 @@ trait ProviderResponseTrait
         ?float $temperature = 0.7,
         ?string $system_prompt = null,
         array $messages = [],
+        array $image_urls = [],
     ): mixed {
         if (Str::contains($model, ['gpt', 'o1'])) {
             return $this->get_response_from_prompt_and_context(
@@ -30,6 +31,7 @@ trait ProviderResponseTrait
                 json_mode: $json_mode,
                 user_id: $user_id,
                 temperature: $temperature,
+                image_urls: $image_urls,
             );
         }
 
@@ -66,6 +68,7 @@ trait ProviderResponseTrait
                 job_uuid: $job_uuid,
                 json_mode: $json_mode,
                 system_prompt: $system_prompt,
+                image_urls: $image_urls,
             );
         }
 
