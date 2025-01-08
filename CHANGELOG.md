@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.37.0 - 2025-01-08
+
+Added ability to attach image urls for OpenAI and Anthropic models
+
 ## 1.36.0 - 2024-10-22
 
 Updated default claude model
