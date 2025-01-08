@@ -34,12 +34,47 @@ trait ClaudeTrait
         bool $json_mode = false,
         int $max_token_retry_attempts = 2,
         ?string $system_prompt = null,
+        array $image_urls = [],
     ): mixed {
         if (count($messages) < 1) {
+            $content = [];
+
+            // Add images if they exist
+            foreach ($image_urls as $url) {
+                try {
+                    $imageData = base64_encode(file_get_contents($url));
+                    $extension = pathinfo($url, PATHINFO_EXTENSION);
+                    $mimeType = match (strtolower($extension)) {
+                        'jpg', 'jpeg' => 'image/jpeg',
+                        'png' => 'image/png',
+                        'gif' => 'image/gif',
+                        'webp' => 'image/webp',
+                        default => 'image/jpeg',
+                    };
+
+                    $content[] = [
+                        'type' => 'image',
+                        'source' => [
+                            'type' => 'base64',
+                            'media_type' => $mimeType,
+                            'data' => $imageData,
+                        ],
+                    ];
+                } catch (Exception $e) {
+                    Log::error('Failed to process image: ' . $e->getMessage());
+                }
+            }
+
+            // Add the text prompt
+            $content[] = [
+                'type' => 'text',
+                'text' => $prompt,
+            ];
+
             $messages = [
                 [
                     'role' => 'user',
-                    'content' => $prompt,
+                    'content' => $content,
                 ],
             ];
         } else {
