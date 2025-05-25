@@ -166,7 +166,7 @@ trait OpenAiTrait
     public function get_response_from_prompt_and_context(
         string $prompt,
         string $context = 'You are a helpful assistant',
-        string $model = 'gpt-3.5-turbo',
+        string $model = 'gpt-4.1-mini',
         ?array $function_definition = null,
         bool $json_mode = false,
         ?int $user_id = null,
