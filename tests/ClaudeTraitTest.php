@@ -83,7 +83,7 @@ test('it logs the response correctly', function () {
     $this->assertDatabaseHas('cost_logs', [
         'user_id' => 1,
         'prompt_identifier' => 'example-id',
-        'model' => 'claude-3-5-sonnet-20241022',
+        'model' => 'claude-sonnet-4-20250514',
         'service' => 'Anthropic',
         'input_tokens' => 100,
         'output_tokens' => 150,

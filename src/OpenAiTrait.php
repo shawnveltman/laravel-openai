@@ -31,7 +31,9 @@ trait OpenAiTrait
         ?string $user_identifier = null,
         array $image_urls = [],
     ) {
-        $is_o1_model = Str::startsWith($model, 'o1');
+        $is_o1_model = Str::startsWith($model, 'o1') ||
+                       Str::startsWith($model, 'o3') ||
+                       Str::startsWith($model, 'o4');
 
         $final_messages = collect([]);
         if (! $is_o1_model) {
@@ -272,21 +274,120 @@ EOD;
     public function get_max_output_tokens(string $model = 'gpt-3.5-turbo'): int
     {
         switch ($model) {
+            // O-series models
+            case 'o1':
+            case 'o1-2024-12-17':
+                return 100000;
+            case 'o1-pro':
+            case 'o1-pro-2025-03-19':
+                return 100000;
+            case 'o3-pro':
+            case 'o3-pro-2025-06-10':
+                return 100000;
+            case 'o3':
+            case 'o3-2025-04-16':
+                return 100000;
+            case 'o4-mini':
+            case 'o4-mini-2025-04-16':
+                return 65536;
+            case 'o3-mini':
+            case 'o3-mini-2025-01-31':
+                return 65536;
             case 'o1-mini':
+            case 'o1-mini-2024-09-12':
                 return 65536;
             case 'o1-preview':
                 return 32768;
-            case 'chatgpt-4o-latest':
+
+                // GPT-4.5 models
+            case 'gpt-4.5-preview':
+            case 'gpt-4.5-preview-2025-02-27':
+                return 32768;
+
+                // GPT-4.1 models
+            case 'gpt-4.1':
+            case 'gpt-4.1-2025-04-14':
+                return 16384;
+            case 'gpt-4.1-mini':
+            case 'gpt-4.1-mini-2025-04-14':
+                return 16384;
+            case 'gpt-4.1-nano':
+            case 'gpt-4.1-nano-2025-04-14':
+                return 16384;
+
+                // GPT-4o models
+            case 'gpt-4o':
+            case 'gpt-4o-2024-08-06':
+            case 'gpt-4o-audio-preview':
+            case 'gpt-4o-audio-preview-2024-12-17':
+            case 'gpt-4o-realtime-preview':
+            case 'gpt-4o-realtime-preview-2024-12-17':
+                return 16384;
+
+                // GPT-4o-mini models
             case 'gpt-4o-mini':
             case 'gpt-4o-mini-2024-07-18':
-            case 'gpt-3.5-turbo':
+            case 'gpt-4o-mini-audio-preview':
+            case 'gpt-4o-mini-audio-preview-2024-12-17':
+            case 'gpt-4o-mini-realtime-preview':
+            case 'gpt-4o-mini-realtime-preview-2024-12-17':
                 return 16384;
+
+                // Search models
+            case 'gpt-4o-mini-search-preview':
+            case 'gpt-4o-mini-search-preview-2025-03-11':
+            case 'gpt-4o-search-preview':
+            case 'gpt-4o-search-preview-2025-03-11':
+                return 16384;
+
+                // Other specialized models
+            case 'codex-mini-latest':
+                return 8192;
+            case 'computer-use-preview':
+            case 'computer-use-preview-2025-03-11':
+                return 16384;
+            case 'gpt-image-1':
+                return 4096;
+
+                // ChatGPT models
+            case 'chatgpt-4o-latest':
+                return 16384;
+
+                // GPT-4 turbo models
+            case 'gpt-4-turbo':
+            case 'gpt-4-turbo-2024-04-09':
+                return 4096;
+
+                // GPT-4 models
             case 'gpt-4':
             case 'gpt-4-0613':
             case 'gpt-4-0314':
                 return 8192;
+            case 'gpt-4-32k':
+                return 32768;
+
+                // GPT-3.5 models
+            case 'gpt-3.5-turbo':
+            case 'gpt-3.5-turbo-0125':
+                return 16384;
+            case 'gpt-3.5-turbo-instruct':
+                return 4096;
+            case 'gpt-3.5-turbo-16k-0613':
+                return 16384;
+
+                // Embedding models (not for chat completion but included for completeness)
+            case 'text-embedding-3-small':
+            case 'text-embedding-3-large':
+            case 'text-embedding-ada-002':
+                return 8191; // Max input tokens for embeddings
+
+                // Legacy models
+            case 'davinci-002':
+            case 'babbage-002':
+                return 4096;
+
             default:
-                return 4096; // Default for most models, including gpt-3.5-turbo and gpt-4-turbo variants
+                return 4096; // Conservative default for unknown models
         }
     }
 

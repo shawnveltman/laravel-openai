@@ -85,7 +85,7 @@ test('it handles and logs the response correctly', function () {
     $this->assertDatabaseHas('cost_logs', [
         'user_id' => 1,
         'prompt_identifier' => 'example-id',
-        'model' => 'gpt-3.5-turbo',
+        'model' => 'gpt-4.1-mini',
         'service' => 'OpenAI',
         'input_tokens' => 100,
         'output_tokens' => 150,
@@ -341,7 +341,7 @@ test('it sends a correctly formatted request with messages', function () {
         'api.openai.com/v1/chat/completions' => function ($request) use ($fakeApiResponse) {
             // Assert that the request contains the correctly formatted messages
             expect($request->data())->toMatchArray([
-                'model' => 'gpt-3.5-turbo',
+                'model' => 'gpt-4.1-mini',
                 'messages' => [
                     ['role' => 'system', 'content' => 'You are a helpful assistant'],
                     ['role' => 'user', 'content' => 'Hello, World Test!'],
@@ -387,7 +387,7 @@ test('it sends a correctly formatted request without messages', function () {
         'api.openai.com/v1/chat/completions' => function ($request) use ($fakeApiResponse) {
             // Assert that the request contains only the system message if no messages are provided
             expect($request->data())->toMatchArray([
-                'model' => 'gpt-3.5-turbo',
+                'model' => 'gpt-4.1-mini',
                 'messages' => [
                     ['role' => 'system', 'content' => 'You are a helpful assistant'],
                     ['role' => 'user', 'content' => 'Hello, World!'],
