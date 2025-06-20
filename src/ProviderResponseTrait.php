@@ -24,7 +24,7 @@ trait ProviderResponseTrait
         array $messages = [],
         array $image_urls = [],
     ): mixed {
-        if (Str::contains($model, ['gpt', 'o1'])) {
+        if (Str::contains($model, ['gpt', 'o1', 'o3', 'o4', 'chatgpt', 'codex-mini', 'computer-use', 'gpt-image', 'davinci', 'babbage'])) {
             return $this->get_response_from_prompt_and_context(
                 prompt: $prompt,
                 model: $model,
