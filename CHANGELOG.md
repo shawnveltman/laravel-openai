@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## Updated default models - 2025-05-25
+
+updated default models
+
 ## 1.37.0 - 2025-01-08
 
 Added ability to attach image urls for OpenAI and Anthropic models
