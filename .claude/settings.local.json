@@ -10,7 +10,10 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(git tag:*)"
+      "Bash(git tag:*)",
+      "Bash(composer validate:*)",
+      "Bash(composer update:*)",
+      "Bash(git describe:*)"
     ],
     "deny": []
   }
