@@ -2,6 +2,19 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## v1.39.2 - 2025-07-08
+
+### What's Changed
+
+- Fix: Correct OpenAI environment variable name from `OPEN_API_KEY` to `OPENAI_API_KEY` in config
+- Update Claude local settings with additional commands
+
+### Bug Fixes
+
+- Fixed typo in environment variable name that was preventing proper OpenAI API key configuration
+
+**Full Changelog**: https://github.com/shawnveltman/laravel-openai/compare/v1.39.1...v1.39.2
+
 ## Updated default models - 2025-05-25
 
 updated default models
