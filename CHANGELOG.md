@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## v1.40.1 - 2025-07-09
+
+Release v1.40.1
+
 ## v1.4.1 - 2025-07-09
 
 Release v1.4.1
