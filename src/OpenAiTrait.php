@@ -168,7 +168,7 @@ trait OpenAiTrait
     public function get_response_from_prompt_and_context(
         string $prompt,
         string $context = 'You are a helpful assistant',
-        string $model = 'gpt-4.1-mini',
+        string $model = 'gpt-5-nano',
         ?array $function_definition = null,
         bool $json_mode = false,
         ?int $user_id = null,
@@ -271,7 +271,7 @@ EOD;
         return $summary_response_text;
     }
 
-    public function get_max_output_tokens(string $model = 'gpt-3.5-turbo'): int
+    public function get_max_output_tokens(string $model = 'gpt-5-nano'): int
     {
         switch ($model) {
             // O-series models
