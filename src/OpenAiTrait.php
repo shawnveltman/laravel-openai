@@ -23,7 +23,7 @@ trait OpenAiTrait
         float $top_p = 1,
         float $frequency_penalty = 0,
         float $presence_penalty = 0,
-        string $model = 'gpt-3.5-turbo',
+        string $model = 'gpt-5-nano',
         string $role_context = 'You are a helpful assistant.',
         int $timeout_in_seconds = 600,
         ?array $function_definition = null,
@@ -275,6 +275,10 @@ EOD;
     {
         switch ($model) {
             // O-series models
+            case 'gpt-5':
+            case 'gpt-5-mini':
+            case 'gpt-5-nano':
+                return 128000;
             case 'o1':
             case 'o1-2024-12-17':
                 return 100000;

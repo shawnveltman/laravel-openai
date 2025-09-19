@@ -13,7 +13,11 @@
       "Bash(git tag:*)",
       "Bash(composer validate:*)",
       "Bash(composer update:*)",
-      "Bash(git describe:*)"
+      "Bash(git describe:*)",
+      "Bash(git pull:*)",
+      "Bash(gh release list:*)",
+      "Bash(gh release create:*)",
+      "Bash(gh release delete:*)"
     ],
     "deny": []
   }
