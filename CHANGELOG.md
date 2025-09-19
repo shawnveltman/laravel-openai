@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.40.2 - 2025-09-19
+
+added gpt-5
+
 ## v1.40.1 - 2025-07-09
 
 Release v1.40.1
