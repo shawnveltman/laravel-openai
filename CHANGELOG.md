@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.42.0 - 2025-09-30
+
+Added thinking effort parameters
+
 ## 1.41.3 - 2025-09-30
 
 Additional updates to anthropic to make it work with thinking
