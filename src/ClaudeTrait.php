@@ -97,9 +97,11 @@ trait ClaudeTrait
         // Handle JSON mode differently based on whether extended thinking is enabled
         $use_extended_thinking = $thinking_tokens && $thinking_tokens >= 1024;
 
-        // When extended thinking is enabled, set temperature to 1
+        // When extended thinking is enabled, unset temperature and top_k
+        // Only top_p between 0.95 and 1 is allowed
         if ($use_extended_thinking) {
-            $temperature = 1;
+            $temperature = null;
+            $top_k = null;
         }
 
         if ($json_mode && ! $assistant_starter_text) {
@@ -130,8 +132,11 @@ trait ClaudeTrait
                 'max_tokens' => $max_tokens,
                 'model' => $model,
                 'messages' => $messages,
-                'top_k' => $top_k,
             ];
+
+            if ($top_k !== null) {
+                $parameters['top_k'] = $top_k;
+            }
 
             if ($temperature) {
                 $parameters['temperature'] = $temperature;
