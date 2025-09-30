@@ -3,6 +3,7 @@
 namespace Shawnveltman\LaravelOpenai;
 
 use Illuminate\Support\Str;
+use Shawnveltman\LaravelOpenai\Enums\ThinkingEffort;
 
 trait ProviderResponseTrait
 {
@@ -23,7 +24,7 @@ trait ProviderResponseTrait
         ?string $system_prompt = null,
         array $messages = [],
         array $image_urls = [],
-        ?int $thinking_tokens = 16000,
+        ?ThinkingEffort $thinking_effort = ThinkingEffort::MEDIUM,
         int $max_tokens = 64000,
     ): mixed {
         if (Str::contains($model, ['gpt', 'o1', 'o3', 'o4', 'chatgpt', 'codex-mini', 'computer-use', 'gpt-image', 'davinci', 'babbage'])) {
@@ -34,6 +35,7 @@ trait ProviderResponseTrait
                 user_id: $user_id,
                 temperature: $temperature,
                 image_urls: $image_urls,
+                thinking_effort: $thinking_effort,
             );
         }
 
@@ -72,7 +74,7 @@ trait ProviderResponseTrait
                 json_mode: $json_mode,
                 system_prompt: $system_prompt,
                 image_urls: $image_urls,
-                thinking_tokens: $thinking_tokens,
+                thinking_tokens: $thinking_effort?->toClaudeTokens() ?? ThinkingEffort::MEDIUM->toClaudeTokens(),
             );
         }
 

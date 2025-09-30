@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Shawnveltman\LaravelOpenai\Enums\ThinkingEffort;
 use Shawnveltman\LaravelOpenai\Exceptions\GeneralOpenAiException;
 use Shawnveltman\LaravelOpenai\Exceptions\OpenAi500ErrorException;
 use Shawnveltman\LaravelOpenai\Exceptions\OpenAiRateLimitExceededException;
@@ -30,6 +31,7 @@ trait OpenAiTrait
         bool $json_mode = false,
         ?string $user_identifier = null,
         array $image_urls = [],
+        ?ThinkingEffort $thinking_effort = null,
     ) {
         $is_o1_model = Str::startsWith($model, 'o1') ||
                        Str::startsWith($model, 'o3') ||
@@ -114,6 +116,11 @@ trait OpenAiTrait
             $instructions_array['user'] = $user_identifier;
         }
 
+        // Add reasoning_effort for GPT-5 and o-series models
+        if ($thinking_effort && (Str::startsWith($model, 'gpt-5') || $is_o1_model)) {
+            $instructions_array['reasoning_effort'] = $thinking_effort->toOpenAIEffort();
+        }
+
         $response = Http::withToken(config('ai_providers.open_ai_key'))
             ->timeout($timeout_in_seconds)
             ->post(
@@ -176,6 +183,7 @@ trait OpenAiTrait
         int $retry_count = 0,
         array $messages = [],
         array $image_urls = [],
+        ?ThinkingEffort $thinking_effort = null,
     ): ?string {
 
         if (count($messages) < 1) {
@@ -214,6 +222,7 @@ trait OpenAiTrait
             json_mode: $json_mode,
             user_identifier: $user_identifier,
             image_urls: $image_urls,
+            thinking_effort: $thinking_effort,
         );
         $this->attempt_log_prompt($user_id, $raw_response, $model);
 
@@ -539,8 +548,31 @@ MALFORMED STRING:
 Your output should be ONLY the corrected JSON.
 
 EOD;
-        $response = $this->get_response_from_prompt_and_context(prompt: $prompt, model: 'gpt-3.5-turbo', json_mode: true, user_id: $user_id);
+        $response = $this->get_response_from_prompt_and_context(
+            prompt: $prompt,
+            model: 'gpt-5-nano',
+            json_mode: true,
+            user_id: $user_id,
+            thinking_effort: ThinkingEffort::MINIMAL
+        );
+
+        // Strip markdown JSON code blocks if present
+        $response = $this->strip_markdown_json($response);
 
         return json_decode($response, true) ?? [];
+    }
+
+    private function strip_markdown_json(?string $response): ?string
+    {
+        if (! $response) {
+            return $response;
+        }
+
+        // Remove markdown JSON code block markers
+        $response = preg_replace('/^```json\s*/i', '', $response);
+        $response = preg_replace('/^```\s*/m', '', $response);
+        $response = preg_replace('/\s*```\s*$/s', '', $response);
+
+        return trim($response);
     }
 }
