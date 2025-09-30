@@ -35,6 +35,7 @@ trait ClaudeTrait
         int $max_token_retry_attempts = 2,
         ?string $system_prompt = null,
         array $image_urls = [],
+        ?int $thinking_tokens = 16000,
     ): mixed {
 
         if($temperature && $top_p)
@@ -131,6 +132,13 @@ trait ClaudeTrait
 
             if ($system_prompt) {
                 $parameters['system'] = $system_prompt;
+            }
+
+            if ($thinking_tokens && $thinking_tokens >= 1024) {
+                $parameters['thinking'] = [
+                    'type' => 'enabled',
+                    'budget_tokens' => $thinking_tokens,
+                ];
             }
 
             $response_object = Http::timeout($timeout_seconds)

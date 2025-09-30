@@ -23,6 +23,7 @@ trait ProviderResponseTrait
         ?string $system_prompt = null,
         array $messages = [],
         array $image_urls = [],
+        ?int $thinking_tokens = 16000,
     ): mixed {
         if (Str::contains($model, ['gpt', 'o1', 'o3', 'o4', 'chatgpt', 'codex-mini', 'computer-use', 'gpt-image', 'davinci', 'babbage'])) {
             return $this->get_response_from_prompt_and_context(
@@ -69,6 +70,7 @@ trait ProviderResponseTrait
                 json_mode: $json_mode,
                 system_prompt: $system_prompt,
                 image_urls: $image_urls,
+                thinking_tokens: $thinking_tokens,
             );
         }
 
