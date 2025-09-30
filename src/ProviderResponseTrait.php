@@ -24,6 +24,7 @@ trait ProviderResponseTrait
         array $messages = [],
         array $image_urls = [],
         ?int $thinking_tokens = 16000,
+        int $max_tokens = 64000,
     ): mixed {
         if (Str::contains($model, ['gpt', 'o1', 'o3', 'o4', 'chatgpt', 'codex-mini', 'computer-use', 'gpt-image', 'davinci', 'babbage'])) {
             return $this->get_response_from_prompt_and_context(
@@ -61,6 +62,7 @@ trait ProviderResponseTrait
             return $this->get_claude_response(
                 prompt: $prompt,
                 model: $model,
+                max_tokens: $max_tokens,
                 temperature: $temperature,
                 assistant_starter_text: $assistant_starter_text,
                 user_id: $user_id,

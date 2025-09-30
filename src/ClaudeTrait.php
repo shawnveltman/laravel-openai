@@ -20,7 +20,7 @@ trait ClaudeTrait
     public function get_claude_response(
         string $prompt,
         string $model = 'claude-sonnet-4-20250514',
-        int $max_tokens = 4096,
+        int $max_tokens = 64000,
         ?float $temperature = 0.7,
         ?float $top_p = null,
         int $top_k = 5,
