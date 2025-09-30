@@ -347,7 +347,7 @@ test('it sends a correctly formatted request with messages', function () {
                     ['role' => 'user', 'content' => 'Hello, World Test!'],
                     ['role' => 'user', 'content' => 'Hello, World!'],
                 ],
-                'temperature' => 0.7,
+                'temperature' => 1, // GPT-5 models require temperature = 1
                 'top_p' => 1,
                 'frequency_penalty' => 0,
                 'presence_penalty' => 0,
@@ -392,7 +392,7 @@ test('it sends a correctly formatted request without messages', function () {
                     ['role' => 'system', 'content' => 'You are a helpful assistant'],
                     ['role' => 'user', 'content' => 'Hello, World!'],
                 ],
-                'temperature' => 0.7,
+                'temperature' => 1, // GPT-5 models require temperature = 1
                 'top_p' => 1,
                 'frequency_penalty' => 0,
                 'presence_penalty' => 0,
@@ -436,8 +436,11 @@ test('get_openai_chat_completion handles O1 model correctly', function () {
                 return $message['role'] === 'system';
             });
 
-            // Check that temperature, top_p, frequency_penalty, and presence_penalty are not included
-            expect($data)->not->toHaveKeys(['temperature', 'top_p', 'frequency_penalty', 'presence_penalty']);
+            // Check that top_p, frequency_penalty, and presence_penalty are not included
+            expect($data)->not->toHaveKeys(['top_p', 'frequency_penalty', 'presence_penalty']);
+
+            // Check that temperature IS included and set to 1 for o-series models
+            expect($data)->toHaveKey('temperature', 1);
 
             return Http::response($fakeApiResponse, 200);
         },

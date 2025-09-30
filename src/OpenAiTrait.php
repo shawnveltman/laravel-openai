@@ -37,6 +37,13 @@ trait OpenAiTrait
                        Str::startsWith($model, 'o3') ||
                        Str::startsWith($model, 'o4');
 
+        $is_gpt5_model = Str::startsWith($model, 'gpt-5');
+
+        // GPT-5 and o-series models require temperature = 1
+        if ($is_gpt5_model || $is_o1_model) {
+            $temperature = 1;
+        }
+
         $final_messages = collect([]);
         if (! $is_o1_model) {
             $final_messages->push(['role' => 'system', 'content' => $role_context]);
@@ -98,10 +105,17 @@ trait OpenAiTrait
         ];
 
         if (! $is_o1_model) {
-            $instructions_array['temperature'] = $temperature;
             $instructions_array['top_p'] = $top_p;
             $instructions_array['frequency_penalty'] = $frequency_penalty;
             $instructions_array['presence_penalty'] = $presence_penalty;
+        }
+
+        // Temperature is required for both o-series and GPT-5 models (must be 1)
+        // For other models, only include if specified
+        if ($is_o1_model || $is_gpt5_model) {
+            $instructions_array['temperature'] = 1;
+        } elseif ($temperature !== null) {
+            $instructions_array['temperature'] = $temperature;
         }
 
         if ($json_mode && ! $is_o1_model) {
