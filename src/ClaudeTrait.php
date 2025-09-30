@@ -94,8 +94,19 @@ trait ClaudeTrait
             ];
         }
 
+        // Handle JSON mode differently based on whether extended thinking is enabled
+        $use_extended_thinking = $thinking_tokens && $thinking_tokens >= 1024;
+
         if ($json_mode && ! $assistant_starter_text) {
-            $assistant_starter_text = '{';
+            if ($use_extended_thinking) {
+                // When using extended thinking, we can't prefill assistant content
+                // so we add JSON instruction to system prompt instead
+                $json_instruction = "\n\nIMPORTANT: You must respond ONLY with valid JSON starting with '{'. Do not include any text before or after the JSON object.";
+                $system_prompt = ($system_prompt ?? '') . $json_instruction;
+            } else {
+                // Traditional approach: prefill with '{'
+                $assistant_starter_text = '{';
+            }
         }
 
         if ($assistant_starter_text) {
@@ -129,7 +140,9 @@ trait ClaudeTrait
                 $parameters['system'] = $system_prompt;
             }
 
-            if ($thinking_tokens && $thinking_tokens >= 1024) {
+            // Extended thinking cannot be used with assistant_starter_text
+            // as assistant messages must start with a thinking block when enabled
+            if ($use_extended_thinking && !$assistant_starter_text) {
                 $parameters['thinking'] = [
                     'type' => 'enabled',
                     'budget_tokens' => $thinking_tokens,
