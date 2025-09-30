@@ -21,8 +21,8 @@ trait ClaudeTrait
         string $prompt,
         string $model = 'claude-sonnet-4-20250514',
         int $max_tokens = 4096,
-        float $temperature = 0.7,
-        float $top_p = 0.7,
+        ?float $temperature = 0.7,
+        ?float $top_p = null,
         int $top_k = 5,
         int $iteration = 1,
         int $timeout_seconds = 600,
@@ -36,6 +36,17 @@ trait ClaudeTrait
         ?string $system_prompt = null,
         array $image_urls = [],
     ): mixed {
+
+        if($temperature && $top_p)
+        {
+            $top_p = null;
+        }
+
+        if($top_p)
+        {
+            $temperature = null;
+        }
+
         if (count($messages) < 1) {
             $content = [];
 
@@ -104,10 +115,19 @@ trait ClaudeTrait
                 'max_tokens' => $max_tokens,
                 'model' => $model,
                 'messages' => $messages,
-                'temperature' => $temperature,
-                'top_p' => $top_p,
                 'top_k' => $top_k,
             ];
+
+            if($temperature)
+            {
+                $parameters['temperature'] = $temperature;
+            }
+
+            if($top_p)
+            {
+                $parameters['top_p'] = $top_p;
+            }
+
 
             if ($system_prompt) {
                 $parameters['system'] = $system_prompt;
