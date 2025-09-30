@@ -97,6 +97,11 @@ trait ClaudeTrait
         // Handle JSON mode differently based on whether extended thinking is enabled
         $use_extended_thinking = $thinking_tokens && $thinking_tokens >= 1024;
 
+        // When extended thinking is enabled, set temperature to 1
+        if ($use_extended_thinking) {
+            $temperature = 1;
+        }
+
         if ($json_mode && ! $assistant_starter_text) {
             if ($use_extended_thinking) {
                 // When using extended thinking, we can't prefill assistant content
