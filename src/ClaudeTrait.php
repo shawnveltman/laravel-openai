@@ -37,13 +37,11 @@ trait ClaudeTrait
         array $image_urls = [],
     ): mixed {
 
-        if($temperature && $top_p)
-        {
+        if ($temperature && $top_p) {
             $top_p = null;
         }
 
-        if($top_p)
-        {
+        if ($top_p) {
             $temperature = null;
         }
 
@@ -118,16 +116,13 @@ trait ClaudeTrait
                 'top_k' => $top_k,
             ];
 
-            if($temperature)
-            {
+            if ($temperature) {
                 $parameters['temperature'] = $temperature;
             }
 
-            if($top_p)
-            {
+            if ($top_p) {
                 $parameters['top_p'] = $top_p;
             }
-
 
             if ($system_prompt) {
                 $parameters['system'] = $system_prompt;
