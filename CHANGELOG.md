@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## 1.41.2 - 2025-09-30
+
+Added fix for thinking + json mode
+
 ## 1.41.1 - 2025-09-30
 
 Added thinking tokens
