@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-openai` will be documented in this file.
 
+## V1.41 - 2025-11-24
+
+Added thinking effort NONE
+
 ## 1.42.1 - 2025-09-30
 
 Continued work on thinking
