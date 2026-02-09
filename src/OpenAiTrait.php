@@ -301,6 +301,9 @@ EOD;
             case 'gpt-5':
             case 'gpt-5-mini':
             case 'gpt-5-nano':
+            case 'gpt-5.2':
+            case 'gpt-5.2-mini':
+            case 'gpt-5.2-nano':
                 return 128000;
             case 'o1':
             case 'o1-2024-12-17':
